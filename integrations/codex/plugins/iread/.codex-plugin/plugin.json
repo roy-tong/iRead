@@ -1,0 +1,35 @@
+{
+  "name": "iread",
+  "version": "0.2.0-beta.2+codex.20260717030117",
+  "description": "Create one reviewed iRead subscription across multiple professional domains.",
+  "author": {
+    "name": "Tong Xiarui"
+  },
+  "license": "MIT",
+  "keywords": [
+    "iread",
+    "research",
+    "rss",
+    "reports",
+    "source-discovery",
+    "cli"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "iRead",
+    "shortDescription": "Subscribe to multiple professional fields.",
+    "longDescription": "Expand multiple domains, verify representative works and source roles, then merge approved fields into one local iRead subscription with daily, weekly, and monthly reports.",
+    "developerName": "Tong Xiarui",
+    "category": "Productivity",
+    "capabilities": [
+      "Local CLI",
+      "Multi-domain Subscription",
+      "Source Review"
+    ],
+    "defaultPrompt": [
+      "\u7528 iRead \u540c\u65f6\u8ba2\u9605\u6211\u5173\u5fc3\u7684\u591a\u4e2a\u4e13\u4e1a\u9886\u57df",
+      "\u68c0\u67e5\u6211\u7684 iRead \u4fe1\u6e90\u6e05\u5355\u53ca\u4ee3\u8868\u4f5c",
+      "\u628a\u5df2\u6279\u51c6\u7684\u7814\u7a76\u9886\u57df\u5408\u5e76\u6210\u4e00\u4e2a\u8ba2\u9605"
+    ]
+  }
+}

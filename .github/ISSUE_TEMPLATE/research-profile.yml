@@ -1,0 +1,65 @@
+name: iRead subscription request
+description: Request source lists and one reporting setup for one or more fields.
+title: "[Subscription]: "
+labels:
+  - subscription
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Only the fields are required. Maintainers can discover candidate sources and representative works; you do not need to know RSS URLs.
+  - type: input
+    id: field
+    attributes:
+      label: Research fields or industries
+      description: List one or more fields using the terms you naturally use.
+      placeholder: Medical-device regulation, energy markets, digital humanities
+    validations:
+      required: true
+  - type: input
+    id: regions
+    attributes:
+      label: Regions
+      description: Optional geographic scope.
+      placeholder: China, United States, Europe, global
+  - type: input
+    id: languages
+    attributes:
+      label: Languages
+      description: Optional source languages.
+      placeholder: Chinese and English
+  - type: textarea
+    id: decisions
+    attributes:
+      label: Audience and decisions
+      description: Who reads the reports and what decisions should they support?
+      placeholder: Industry researchers tracking policy, product launches, and supply-chain changes.
+  - type: textarea
+    id: known_sources
+    attributes:
+      label: Known authors or sources
+      description: Optional names or URLs. These are candidates, not automatic approvals.
+  - type: textarea
+    id: exclusions
+    attributes:
+      label: Exclusions
+      description: Topics, regions, source types, or noise that should be excluded.
+  - type: dropdown
+    id: report_preset
+    attributes:
+      label: Initial report preference
+      description: This is a proposed default and will be confirmed after source review.
+      options:
+        - Standard
+        - Light
+        - Deep
+        - Not sure yet
+    validations:
+      required: true
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Content and privacy
+      options:
+        - label: I have not included credentials, private session data, paywalled copies, or third-party article bodies.
+          required: true

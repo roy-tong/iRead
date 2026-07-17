@@ -1,0 +1,126 @@
+{
+  "timezone": "Asia/Shanghai",
+  "history_start": "2026-01-01T00:00:00+08:00",
+  "strategy_preset": "deep_research",
+  "notion": {
+    "report_parent_titles": {
+      "daily": "日报",
+      "weekly": "周报",
+      "monthly": "月报"
+    },
+    "require_report_parent": true
+  },
+  "editorial_policy": {
+    "unit_of_analysis": "event_claim_thesis",
+    "min_core_relevance": 55,
+    "min_core_evidence": 55,
+    "min_core_credibility": 55,
+    "max_articles_per_event": 3,
+    "cross_source_requires_independent_sources": 2,
+    "unreviewed_content_role": "discovery_only",
+    "allow_empty_high_signal_report": true
+  },
+  "report_finalization": {
+    "start_at_scheduled_time": true,
+    "require_full_window_analysis": true,
+    "parallel_batches": 3,
+    "min_content_chars": 80,
+    "min_description_chars": 120
+  },
+  "daily": {
+    "enabled": true,
+    "title_prefix": "AI与具身情报日报",
+    "rolling_hours": 24,
+    "publish_hour": 18,
+    "publish_minute": 0,
+    "max_articles": 220,
+    "max_event_clusters": 40,
+    "detail_articles": 60,
+    "max_articles_per_event": 3,
+    "must_read_limit": 5,
+    "brief_limit": 5,
+    "original_signal_limit": 3,
+    "reading_minutes": 10,
+    "focus": ["material_changes", "new_evidence", "verification_queue"]
+  },
+  "weekly": {
+    "enabled": true,
+    "title_prefix": "AI与具身深度周报",
+    "weekday": 4,
+    "rolling_days": 7,
+    "publish_hour": 18,
+    "publish_minute": 0,
+    "max_articles": 900,
+    "max_event_clusters": 120,
+    "detail_articles": 180,
+    "max_articles_per_event": 3,
+    "deep_dive_limit": 5,
+    "deep_read_limit": 3,
+    "skim_limit": 5,
+    "reading_minutes": 25,
+    "focus": ["event_synthesis", "trend_change", "source_disagreement"]
+  },
+  "monthly": {
+    "enabled": true,
+    "title_prefix": "AI与具身月度研究",
+    "publish_on_last_day": true,
+    "publish_hour": 18,
+    "publish_minute": 0,
+    "max_articles": 3000,
+    "max_event_clusters": 200,
+    "detail_articles": 300,
+    "max_articles_per_event": 3,
+    "thesis_limit": 6,
+    "canonical_reading_limit": 10,
+    "trend_history_months": 12,
+    "reading_minutes": 45,
+    "focus": ["structural_change", "prediction_review", "source_quality_review"]
+  },
+  "analysis": {
+    "batch_size": 10,
+    "max_article_chars": 14000,
+    "max_transcript_chars": 36000,
+    "max_summary_chars": 900,
+    "model": "gpt-5.6-terra",
+    "reasoning_effort": "high",
+    "timeout_seconds": 1800
+  },
+  "collection": {
+    "werss_base_url": "http://127.0.0.1:8001",
+    "werss_db_path": "data/we-mp-rss/we_mp_rss.db",
+    "werss_workers": [
+      {
+        "name": "worker-2",
+        "base_url": "http://127.0.0.1:8101",
+        "db_path": "data/we-mp-rss-worker-2/we_mp_rss.db"
+      },
+      {
+        "name": "worker-3",
+        "base_url": "http://127.0.0.1:8102",
+        "db_path": "data/we-mp-rss-worker-3/we_mp_rss.db"
+      }
+    ],
+    "rss_page_size": 100,
+    "request_timeout_seconds": 45,
+    "external_request_timeout_seconds": 35,
+    "stale_required_days": 14,
+    "stale_other_days": 30,
+    "initial_backfill_pages": 80,
+    "backfill_batch_pages": 10,
+    "backfill_quiet_seconds": 90,
+    "backfill_priority": "history_first",
+    "backfill_nodes": ["main", "worker-2", "worker-3"],
+    "recent_refresh_nodes": ["main"],
+    "recent_refresh_batch_accounts": 9,
+    "historical_backfill_batch_accounts": 12,
+    "backfill_max_accounts_per_node": 4,
+    "recent_frequency_window_days": 30,
+    "recent_frequency_high_threshold": 60,
+    "recent_frequency_medium_threshold": 20,
+    "recent_refresh_high_interval_seconds": 900,
+    "recent_refresh_medium_interval_seconds": 1800,
+    "recent_refresh_low_interval_seconds": 3600,
+    "subscription_delay_seconds": 8,
+    "worker_feed_sync_delay_seconds": 0.15
+  }
+}

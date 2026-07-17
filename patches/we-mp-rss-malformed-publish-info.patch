@@ -1,0 +1,54 @@
+diff --git a/core/wx/model/web.py b/core/wx/model/web.py
+index 2e77301..acc36dd 100644
+--- a/core/wx/model/web.py
++++ b/core/wx/model/web.py
+@@ -90,23 +90,32 @@ class MpsWeb(WxGather):
+                 if "publish_page" in msg:
+                     msg["publish_page"]=json.loads(msg['publish_page'])
+                     for item in msg["publish_page"]['publish_list']:
+-                        if "publish_info" in item:
+-                            publish_info= json.loads(item['publish_info'])
+-                       
+-                            if "appmsgex" in publish_info:
+-                                # info = '"{}","{}","{}","{}"'.format(str(item["aid"]), item['title'], item['link'], str(item['create_time']))
+-                                for item in publish_info["appmsgex"]:
+-                                    if Gather_Content:
+-                                        if not super().HasGathered(item["aid"]):
+-                                            item["content"] = self.content_extract(item['link'])
+-                                            super().Wait(3,10,tips=f"{item['title']} 采集完成")
+-                                    else:
+-                                        item["content"] = ""
+-                                    item["publish_info"] = publish_info.get("publish_info","")
+-                                    item["id"] = item["aid"]
+-                                    item["mp_id"] = Mps_id
+-                                    if CallBack is not None:
+-                                        super().FillBack(CallBack=CallBack,data=item,Ext_Data={"mp_title":Mps_title,"mp_id":Mps_id})
++                        raw_publish_info = item.get("publish_info")
++                        if not raw_publish_info:
++                            logger.warning("Skipping empty publish_info for %s", Mps_title)
++                            continue
++                        try:
++                            publish_info = json.loads(raw_publish_info)
++                        except (TypeError, json.JSONDecodeError) as exc:
++                            logger.warning(
++                                "Skipping malformed publish_info for %s: %s", Mps_title, exc
++                            )
++                            continue
++
++                        if "appmsgex" in publish_info:
++                            # info = '"{}","{}","{}","{}"'.format(str(item["aid"]), item['title'], item['link'], str(item['create_time']))
++                            for item in publish_info["appmsgex"]:
++                                if Gather_Content:
++                                    if not super().HasGathered(item["aid"]):
++                                        item["content"] = self.content_extract(item['link'])
++                                        super().Wait(3,10,tips=f"{item['title']} 采集完成")
++                                else:
++                                    item["content"] = ""
++                                item["publish_info"] = publish_info.get("publish_info","")
++                                item["id"] = item["aid"]
++                                item["mp_id"] = Mps_id
++                                if CallBack is not None:
++                                    super().FillBack(CallBack=CallBack,data=item,Ext_Data={"mp_title":Mps_title,"mp_id":Mps_id})
+                     print(f"第{i+1}页爬取成功\n")
+                 # 翻页
+                 i += 1

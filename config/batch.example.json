@@ -1,0 +1,29 @@
+{
+  "subscription": {
+    "id": "my-iread",
+    "name": "我的 iRead"
+  },
+  "defaults": {
+    "audiences": ["research"],
+    "goals": ["material_changes", "trend_detection", "source_verification"],
+    "languages": ["zh-CN", "en"],
+    "regions": ["global"],
+    "max_sources": 20,
+    "preset": "standard"
+  },
+  "domains": [
+    {
+      "id": "medical-devices",
+      "field": "医疗器械监管与临床转化"
+    },
+    {
+      "id": "energy-markets",
+      "field": "新能源电力市场"
+    },
+    {
+      "id": "indie-games",
+      "field": "独立游戏发行与商业化",
+      "regions": ["中国", "北美", "欧洲", "日本"]
+    }
+  ]
+}

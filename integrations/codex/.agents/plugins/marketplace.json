@@ -1,0 +1,20 @@
+{
+  "name": "iread",
+  "interface": {
+    "displayName": "iRead"
+  },
+  "plugins": [
+    {
+      "name": "iread",
+      "source": {
+        "source": "local",
+        "path": "./plugins/iread"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

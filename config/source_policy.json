@@ -1,0 +1,34 @@
+{
+  "rating": {
+    "prior_sample_size": 20,
+    "domain_fit_priors": {
+      "required": 85,
+      "preferred": 68,
+      "watch": 50
+    },
+    "confidence_samples": {
+      "medium": 5,
+      "high": 20
+    },
+    "overall_weights": {
+      "domain_fit": 0.4,
+      "content_quality": 0.4,
+      "collection_quality": 0.2
+    },
+    "grade_thresholds": {
+      "a": 80,
+      "b": 65,
+      "c": 50
+    }
+  },
+  "portfolio": {
+    "representative_works": 3,
+    "target_roles": [
+      "primary_source",
+      "expert_voice",
+      "independent_reporting",
+      "specialist_analysis",
+      "discovery_signal"
+    ]
+  }
+}

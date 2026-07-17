@@ -1,0 +1,165 @@
+diff --git a/driver/wx.py b/driver/wx.py
+index 36fa2c7..64c8701 100644
+--- a/driver/wx.py
++++ b/driver/wx.py
+@@ -484,9 +484,27 @@ class Wx:
+             code_src = await qrcode.get_attribute("src")
+             print("正在生成二维码图片...")
+             print(f"code_src:{code_src}")
+ 
+-            # 使用Playwright截图功能（添加异常处理）
+-            await qrcode.screenshot(path=self.wx_login_url)
++            # On macOS WebKit, element screenshots can wait indefinitely for the
++            # animated login page to become stable. Fetch the image with the same
++            # browser context first so session cookies are preserved.
++            saved_directly = False
++            if code_src:
++                try:
++                    from urllib.parse import urljoin
++                    code_url = urljoin(page.url, code_src)
++                    response = await page.context.request.get(code_url, timeout=30000)
++                    if response.ok:
++                        body = await response.body()
++                        if len(body) > 364:
++                            with open(self.wx_login_url, "wb") as handle:
++                                handle.write(body)
++                            saved_directly = True
++                except Exception as direct_error:
++                    print_warning(f"直接获取二维码失败，回退元素截图: {direct_error}")
++
++            if not saved_directly:
++                await qrcode.screenshot(path=self.wx_login_url, timeout=120000)
+ 
+            print("二维码已保存为 wx_qrcode.png，请扫码登录...")
+            self.HasCode = True
+@@ -511,13 +529,21 @@ class Wx:
+             if self.Notice is not None:
+                 self.Notice()
+ 
+-            # 监听页面导航事件
+-            def handle_frame_navigated(frame):
+-                current_url = frame.url
+-                if self.WX_HOME in current_url:
+-                    print(f"登录成功，正在获取cookie和token...")
+-            page.on('framenavigated', handle_frame_navigated)
+-            await page.wait_for_event("framenavigated", timeout=5*60 * 1000)
++            # WeChat may complete login with history.replaceState instead of a
++            # frame navigation. Poll both URL and authenticated cookies so the
++            # login flow works with old and new versions of the admin portal.
++            login_deadline = time.monotonic() + 5 * 60
++            while time.monotonic() < login_deadline:
++                current_url = page.url
++                cookies = await page.context.cookies()
++                cookie_names = {cookie.get("name") for cookie in cookies}
++                has_login_cookie = bool({"slave_sid", "slave_user"} & cookie_names)
++                if self.WX_HOME in current_url or has_login_cookie:
++                    print("登录成功，正在获取cookie和token...")
++                    break
++                await page.wait_for_timeout(1000)
++            else:
++                raise TimeoutError("等待微信公众号后台登录超时")
+ 
+             from .success import setStatus
+             with self._login_lock:
+diff --git a/apis/auth.py b/apis/auth.py
+--- a/apis/auth.py
++++ b/apis/auth.py
+@@ -26,7 +26,6 @@ from typing import Optional
+ router = APIRouter(prefix=f"/auth", tags=["认证"])
+ from driver.success import Success
+ from driver.wx_api import get_qr_code #通过API登录
+-from driver.wx import WX_API
+ def ApiSuccess(data):
+     if data != None:
+             print("\n登录结果:")
+diff --git a/driver/wx_api.py b/driver/wx_api.py
+index e90727d..ab4d175 100644
+--- a/driver/wx_api.py
++++ b/driver/wx_api.py
+@@ -372,8 +372,7 @@ class WeChatAPI:
+                 # 检查登录状态
+                 status = self._check_login_status(uuid)
+                 if status == 'success':
+-                    self._islogin=True
+-                    self._handle_login_success()
++                    self._islogin = bool(self._handle_login_success())
+                 elif status == 'waiting':
+                     # 继续等待
+                     timer = Timer(2.0, check_login)
+@@ -469,13 +468,13 @@ class WeChatAPI:
+             self.is_logged_in = True
+             
+             # 获取token和cookies
+-            self._extract_login_info()
+-            
+-            # 清理二维码文件
+-            self._clean_qr_code()
+-            from driver.cookies import expire
++            if not self._extract_login_info():
++                self.is_logged_in = False
++                return False
++
+             # 调用成功回调
+             if self._get_account_info() is not  None:
++                self._clean_qr_code()
+                 print_success("登录成功！")
+                 return True
+         except Exception as e:
+@@ -514,16 +513,27 @@ class WeChatAPI:
+ 
+             response.raise_for_status()
+             self.cookies = requests.utils.dict_from_cookiejar(self.session.cookies) if self.session.cookies else {}
+-            print(self.cookies)
+-            # 从URL或页面内容中提取token
+-            import re
+-            token_match = re.search(r'token=([^&\s"\']+)', response.text)
++            logger.info("登录 Cookie 已获取，共 %s 项", len(self.cookies))
++
++            # 新版接口将跳转地址放在 JSON 中，旧版则直接返回文本。
++            try:
++                response_data = response.json()
++            except ValueError:
++                response_data = {}
++            token_sources = [
++                response.text,
++                response.url,
++                str(response_data.get("redirect_url", "")),
++            ]
++            token_match = re.search(r'token(?:=|%3D)(\d+)', "\n".join(token_sources))
+             if token_match:
+                 self.token = token_match.group(1)
+-            
+-            
++                return True
++            logger.error("登录响应中未找到 token")
++            return False
+         except Exception as e:
+             logger.error(f"提取登录信息失败: {str(e)}")
++            return False
+ 
+     def _cookie_string_to_dict(self,cookie_string: str) -> Dict[str, str]:
+         """
+@@ -628,19 +638,13 @@ class WeChatAPI:
+             # 这里需要根据实际页面结构获取账号信息
+             response = self.session.get(self.home_url)
+             response.raise_for_status()
+-            account_list=self._get_account_list()
+-
+-            if account_list is None:
+-                print_error("获取账号列表失败")
+-                return None
+-            # 提取 biz_list 的第一项数据
+-            biz_list=account_list['biz_list']['list']
+-            first_biz_item = biz_list[0] if len(biz_list) > 0 else None
++            account_list = self._get_account_list() or {}
++            biz_list = account_list.get('biz_list', {}).get('list', [])
++            first_biz_item = biz_list[0] if biz_list else {}
+ 
+-            print(first_biz_item)
+             # 解析账号信息（需要根据实际页面结构调整）
+             account_info = {
+-                'wx_app_name': first_biz_item.get('username',''),
++                'wx_app_name': first_biz_item.get('username') or self.cookies.get('slave_user', ''),
+                 'wx_logo': first_biz_item.get('headimgurl',''),
+                 'wx_read_yesterday': 0,
+                 'wx_share_yesterday': 0,

@@ -1,0 +1,9 @@
+{
+  "note": "这是冷启动种子，不是封闭词表。系统会从2026-01-01以来文章中的投融资事件持续抽取并按频次更新实体。",
+  "companies": {
+    "ai_software": ["OpenAI", "Anthropic", "Google DeepMind", "Microsoft", "Meta", "xAI", "NVIDIA", "Amazon", "Perplexity", "Anysphere", "Cursor", "Cognition", "Windsurf", "Replit", "Lovable", "Glean", "Harvey", "Sierra", "Notion", "Canva", "Figma", "Runway", "Midjourney", "Pika", "HeyGen", "ElevenLabs", "Suno", "DeepSeek", "月之暗面", "Kimi", "智谱AI", "MiniMax", "阶跃星辰", "百川智能", "阿里云", "通义千问", "字节跳动", "豆包", "腾讯", "百度", "快手可灵", "生数科技", "LiblibAI", "Manus"],
+    "embodied_ai": ["Tesla", "Figure AI", "1X", "Agility Robotics", "Apptronik", "Boston Dynamics", "Sanctuary AI", "Physical Intelligence", "Skild AI", "Generalist AI", "Covariant", "宇树科技", "优必选", "智元机器人", "傅利叶智能", "银河通用", "逐际动力", "乐聚机器人", "开普勒机器人", "众擎机器人", "加速进化", "帕西尼", "星尘智能", "自变量机器人", "千寻智能", "深度机器人", "傲鲨智能", "因克斯", "戴盟机器人", "灵心巧手", "强脑科技"],
+    "ai_hardware": ["Apple", "Meta", "Google", "Samsung", "华为", "小米", "字节跳动", "阿里巴巴", "腾讯", "Ray-Ban", "XREAL", "Rokid", "雷鸟创新", "影目科技", "闪极科技", "Plaud", "Rabbit", "Omi", "Friend", "Bee", "Limitless", "Anker", "出门问问"]
+  },
+  "people": ["Sam Altman", "Dario Amodei", "Demis Hassabis", "Elon Musk", "Mark Zuckerberg", "Satya Nadella", "Sundar Pichai", "Jensen Huang", "梁文锋", "杨植麟", "唐杰", "闫俊杰", "王小川", "李开复", "李志飞", "稚晖君", "王兴兴", "周剑", "顾捷", "邢伯阳", "彭志辉"]
+}

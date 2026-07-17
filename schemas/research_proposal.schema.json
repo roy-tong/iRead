@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "research_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "name": {"type": "string"},
+        "description": {"type": "string"},
+        "seed_keywords": {"type": "array", "items": {"type": "string"}},
+        "audiences": {"type": "array", "items": {"type": "string"}},
+        "goals": {"type": "array", "items": {"type": "string"}},
+        "languages": {"type": "array", "items": {"type": "string"}},
+        "regions": {"type": "array", "items": {"type": "string"}},
+        "exclusions": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["id", "name", "description", "seed_keywords", "audiences", "goals", "languages", "regions", "exclusions"]
+    },
+    "topic_taxonomy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "classification_rules": {"type": "array", "items": {"type": "string"}},
+        "topics": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "description": {"type": "string"},
+              "keywords": {"type": "array", "items": {"type": "string"}},
+              "secondaries": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": {"type": "string"},
+                    "name": {"type": "string"},
+                    "description": {"type": "string"},
+                    "keywords": {"type": "array", "items": {"type": "string"}}
+                  },
+                  "required": ["id", "name", "description", "keywords"]
+                }
+              }
+            },
+            "required": ["id", "name", "description", "keywords", "secondaries"]
+          }
+        },
+        "event_types": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string"},
+              "name": {"type": "string"},
+              "keywords": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["id", "name", "keywords"]
+          }
+        }
+      },
+      "required": ["classification_rules", "topics", "event_types"]
+    },
+    "entity_seeds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "companies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "topic_id": {"type": "string"},
+              "names": {"type": "array", "items": {"type": "string"}}
+            },
+            "required": ["topic_id", "names"]
+          }
+        },
+        "people": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["companies", "people"]
+    },
+    "source_strategy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "coverage_notes": {"type": "array", "items": {"type": "string"}},
+        "known_gaps": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["coverage_notes", "known_gaps"]
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string"},
+          "name": {"type": "string"},
+          "role": {"type": "string", "enum": ["primary_source", "expert_voice", "independent_reporting", "specialist_analysis", "discovery_signal"]},
+          "source_type": {"type": "string"},
+          "homepage_url": {"type": "string"},
+          "feed_url": {"type": "string"},
+          "platform_id": {"type": "string"},
+          "capture_method": {"type": "string", "enum": ["rss", "web", "api", "wechat", "manual"]},
+          "content_mode": {"type": "string", "enum": ["full_text", "summary_or_link", "episode_notes", "metadata_only"]},
+          "languages": {"type": "array", "items": {"type": "string"}},
+          "regions": {"type": "array", "items": {"type": "string"}},
+          "coverage_topics": {"type": "array", "items": {"type": "string"}},
+          "recommendation_reason": {"type": "string"},
+          "conflict_note": {"type": "string"},
+          "preliminary_scores": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "domain_fit": {"type": "integer", "minimum": 0, "maximum": 100},
+              "authority": {"type": "integer", "minimum": 0, "maximum": 100},
+              "originality": {"type": "integer", "minimum": 0, "maximum": 100},
+              "evidence_discipline": {"type": "integer", "minimum": 0, "maximum": 100},
+              "captureability": {"type": "integer", "minimum": 0, "maximum": 100}
+            },
+            "required": ["domain_fit", "authority", "originality", "evidence_discipline", "captureability"]
+          },
+          "score_confidence": {"type": "string", "enum": ["low", "medium", "high"]},
+          "discovery_evidence_urls": {"type": "array", "items": {"type": "string"}},
+          "representative_works": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "title": {"type": "string"},
+                "url": {"type": "string"},
+                "published_at": {"type": "string"},
+                "why_representative": {"type": "string"}
+              },
+              "required": ["title", "url", "published_at", "why_representative"]
+            }
+          },
+          "warnings": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["id", "name", "role", "source_type", "homepage_url", "feed_url", "platform_id", "capture_method", "content_mode", "languages", "regions", "coverage_topics", "recommendation_reason", "conflict_note", "preliminary_scores", "score_confidence", "discovery_evidence_urls", "representative_works", "warnings"]
+      }
+    },
+    "report_presets": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {"type": "string", "enum": ["light", "standard", "deep"]},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "daily": {"$ref": "#/$defs/reportPolicy"},
+          "weekly": {"$ref": "#/$defs/reportPolicy"},
+          "monthly": {"$ref": "#/$defs/reportPolicy"}
+        },
+        "required": ["id", "name", "description", "daily", "weekly", "monthly"]
+      }
+    }
+  },
+  "$defs": {
+    "reportPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "reading_minutes": {"type": "integer", "minimum": 1, "maximum": 120},
+        "max_items": {"type": "integer", "minimum": 1, "maximum": 50},
+        "focus": {"type": "array", "items": {"type": "string"}}
+      },
+      "required": ["enabled", "reading_minutes", "max_items", "focus"]
+    }
+  },
+  "required": ["research_profile", "topic_taxonomy", "entity_seeds", "source_strategy", "sources", "report_presets"]
+}

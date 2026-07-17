@@ -1,0 +1,30 @@
+services:
+  we-mp-rss:
+    image: ghcr.io/rachelos/we-mp-rss:latest
+    container_name: we-mp-rss
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8001:8001"
+    environment:
+      DB: sqlite:////app/data/we_mp_rss.db
+      USERNAME: ${WERSS_USERNAME:-admin}
+      PASSWORD: ${WERSS_PASSWORD}
+      SECRET_KEY: ${WERSS_SECRET_KEY}
+      ENABLE_JOB: "True"
+      WERSS_AUTH_WEB: "True"
+      WERSS_SEND_CODE: "True"
+      MAX_PAGE: "80"
+      RSS_BASE_URL: http://127.0.0.1:8001/
+      RSS_FULL_CONTEXT: "True"
+      RSS_PAGE_SIZE: "100"
+      GATHER.CONTENT: "True"
+      GATHER.MODEL: web
+      GATHER.CONTENT_AUTO_CHECK: "True"
+      GATHER.CONTENT_AUTO_INTERVAL: "29"
+      GATHER.CONTENT_MODE: web
+      GATHER.CLEAN_HTML: "False"
+      SPAN_INTERVAL: "15"
+      THREADS: "1"
+      TZ: Asia/Shanghai
+    volumes:
+      - ./data/we-mp-rss:/app/data

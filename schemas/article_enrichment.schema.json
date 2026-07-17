@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "articles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "article_id": {"type": "string"},
+          "primary_topic": {"type": "string", "minLength": 1},
+          "secondary_topics": {"type": "array", "items": {"type": "string"}},
+          "tertiary_topics": {"type": "array", "items": {"type": "string"}},
+          "relevance": {"type": "integer", "minimum": 0, "maximum": 100},
+          "summary": {"type": "string"},
+          "facts": {"type": "array", "items": {"type": "string"}},
+          "opinions": {"type": "array", "items": {"type": "string"}},
+          "viewpoints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "speaker": {"type": "string"},
+                "speaker_role": {"type": "string"},
+                "organization": {"type": "string"},
+                "viewpoint": {"type": "string"},
+                "basis": {"type": "string"},
+                "context": {"type": "string"},
+                "interest_relation": {"type": "string"},
+                "novelty": {"type": "string", "enum": ["original_first_person", "original_analysis", "common_view", "unclear"]},
+                "is_prediction": {"type": "boolean"},
+                "verification_target": {"type": "string"}
+              },
+              "required": ["speaker", "speaker_role", "organization", "viewpoint", "basis", "context", "interest_relation", "novelty", "is_prediction", "verification_target"]
+            }
+          },
+          "inferences": {"type": "array", "items": {"type": "string"}},
+          "companies": {"type": "array", "items": {"type": "string"}},
+          "people": {"type": "array", "items": {"type": "string"}},
+          "event_types": {"type": "array", "items": {"type": "string"}},
+          "event_signature": {"type": "string"},
+          "source_role": {
+            "type": "string",
+            "enum": ["first_party", "original_reporting", "interview", "analysis", "aggregation", "repost", "unknown"]
+          },
+          "evidence_quality": {"type": "integer", "minimum": 0, "maximum": 100},
+          "credibility": {"type": "integer", "minimum": 0, "maximum": 100},
+          "originality": {"type": "integer", "minimum": 0, "maximum": 100},
+          "clickbait_risk": {"type": "integer", "minimum": 0, "maximum": 100},
+          "verification_flags": {"type": "array", "items": {"type": "string"}},
+          "financing": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "is_financing": {"type": "boolean"},
+              "company": {"type": "string"},
+              "round": {"type": "string"},
+              "amount": {"type": "string"},
+              "currency": {"type": "string"},
+              "investors": {"type": "array", "items": {"type": "string"}},
+              "valuation": {"type": "string"}
+            },
+            "required": ["is_financing", "company", "round", "amount", "currency", "investors", "valuation"]
+          },
+          "signals": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["article_id", "primary_topic", "secondary_topics", "tertiary_topics", "relevance", "summary", "facts", "opinions", "viewpoints", "inferences", "companies", "people", "event_types", "event_signature", "source_role", "evidence_quality", "credibility", "originality", "clickbait_risk", "verification_flags", "financing", "signals"]
+      }
+    }
+  },
+  "required": ["articles"]
+}

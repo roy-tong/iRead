@@ -1,0 +1,4 @@
+interface:
+  display_name: "Configure iRead Domains"
+  short_description: "Build one reviewed multi-domain information subscription"
+  default_prompt: "Use $onboard-research-domains to configure my iRead subscription from a list of fields."

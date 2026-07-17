@@ -1,0 +1,13 @@
+.env
+.env.local
+.runtime
+data
+logs
+output
+*.db
+*.sqlite
+*.sqlite3
+*.pyc
+*.egg-info/
+__pycache__/
+.DS_Store

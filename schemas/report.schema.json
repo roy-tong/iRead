@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "title": {"type": "string"},
+    "executive_summary": {"type": "string"},
+    "top_topics": {"type": "array", "items": {"type": "string"}},
+    "markdown": {"type": "string"}
+  },
+  "required": ["title", "executive_summary", "top_topics", "markdown"]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "ai-embodied-hardware",
+  "name": "AI与具身研究",
+  "description": "系统跟踪和学习 AI 应用、具身智能和 AI 硬件的产品、技术、商业化、投融资与关键人物变化，优先保留可验证的认知增量和可复用的专业知识。",
+  "seed_keywords": ["AI应用", "具身智能", "AI硬件"],
+  "audiences": ["professional_learning", "product_strategy", "investment_research"],
+  "goals": ["knowledge_compounding", "material_changes", "trend_detection", "source_verification"],
+  "languages": ["zh-CN", "en"],
+  "regions": ["China", "global"],
+  "exclusions": [],
+  "domains": [
+    {
+      "id": "ai_software",
+      "name": "AI 应用",
+      "field": "AI 应用与软件基础设施",
+      "topic_ids": ["infra", "productivity", "emotional_value"]
+    },
+    {
+      "id": "embodied_ai",
+      "name": "具身智能",
+      "field": "具身智能与机器人",
+      "topic_ids": ["biped", "quadruped", "other_morphology", "data_collection", "dexterous_hand"]
+    },
+    {
+      "id": "ai_hardware",
+      "name": "AI 硬件",
+      "field": "非具身 AI 硬件",
+      "topic_ids": ["glasses_headsets", "wearables", "audio", "home_consumer", "education_toys", "health", "chips_modules", "other"]
+    }
+  ]
+}

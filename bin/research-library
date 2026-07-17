@@ -1,0 +1,11 @@
+#!/bin/bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+export PYTHONPATH="$ROOT/src${PYTHONPATH:+:$PYTHONPATH}"
+PYTHON_BIN="${IREAD_PYTHON_BIN:-${PYTHON_BIN:-$(command -v python3 || true)}}"
+if [[ -z "$PYTHON_BIN" ]]; then
+  printf 'Python 3 was not found. Install Python 3.9 or newer, or set IREAD_PYTHON_BIN.\n' >&2
+  exit 2
+fi
+exec "$PYTHON_BIN" -m reporter.viewer --project-root "$ROOT" "$@"

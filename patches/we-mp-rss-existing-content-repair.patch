@@ -1,0 +1,29 @@
+diff --git a/core/db.py b/core/db.py
+index f60689b..badcd39 100644
+--- a/core/db.py
++++ b/core/db.py
+@@ -155,16 +155,23 @@ class Db:
+                art.id=f"{str(art.mp_id)}-{art.id}".replace("MP_WXS_","") # type: ignore
+             if check_exist:
+                 # 检查文章是否已存在
+-                existing_article = session.query(Article.id,Article.publish_time,Article.status,Article.item_show_type,Article.description,Article.title).filter(
++                existing_article = session.query(Article).filter(
+                     (Article.url == art.url) | (Article.id == art.id)
+                 ).first()
+                 if existing_article is not None:
+                     # 当更新时间和状态都相同时，不需要更新
+                     if art.status == existing_article.status and existing_article.publish_time==art.publish_time \
+                     and existing_article.item_show_type==art.item_show_type\
+                     and existing_article.status!=DATA_STATUS.DELETED \
+                     and art.title==existing_article.title: # type: ignore
++                        if art.content and not existing_article.content:
++                            from tools.fix import fix_html, sanitize_utf8
++                            existing_article.content = sanitize_utf8(art.content)
++                            existing_article.content_html = fix_html(existing_article.content)
++                            existing_article.has_content = 1
++                            session.commit()
++                            print_info(f"Repaired article content: {existing_article.id}")
+                         return False
+                     
+                     if art.content is None:
+                        from tools.fix import fix_html

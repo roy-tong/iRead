@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iread-research"
+version = "0.2.0b2"
+description = "iRead local professional information subscriptions and reports."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Tong Xiarui" }]
+dependencies = []
+
+[project.scripts]
+iread = "reporter.cli:main"
+iread-library = "reporter.viewer:main"
+research-reporter = "reporter.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+reporter = ["py.typed"]

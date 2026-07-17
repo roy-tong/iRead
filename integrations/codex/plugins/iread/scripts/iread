@@ -1,0 +1,46 @@
+#!/bin/bash
+set -euo pipefail
+
+PLUGIN_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+IREAD_HOME="${IREAD_HOME:-$HOME/.config/iread}"
+
+find_repository() {
+  local candidate
+  for candidate in "${IREAD_ROOT:-}" "${RESEARCH_REPORTER_ROOT:-}"; do
+    if [[ -n "$candidate" && -x "$candidate/bin/iread" ]]; then
+      cd "$candidate" && pwd
+      return 0
+    fi
+  done
+
+  if [[ -f "$IREAD_HOME/repository-root" ]]; then
+    candidate="$(head -n 1 "$IREAD_HOME/repository-root")"
+    if [[ -x "$candidate/bin/iread" ]]; then
+      cd "$candidate" && pwd
+      return 0
+    fi
+  fi
+
+  candidate="$(cd "$PLUGIN_ROOT/../../../.." && pwd)"
+  if [[ -x "$candidate/bin/iread" ]]; then
+    printf '%s\n' "$candidate"
+    return 0
+  fi
+
+  candidate="$(pwd)"
+  if [[ -x "$candidate/bin/iread" ]]; then
+    printf '%s\n' "$candidate"
+    return 0
+  fi
+  return 1
+}
+
+REPO_ROOT="$(find_repository || true)"
+
+if [[ -z "$REPO_ROOT" ]]; then
+  printf 'iRead repository not found. Run scripts/install.sh codex from the cloned repository.\n' >&2
+  printf 'You may also set IREAD_ROOT to the repository root.\n' >&2
+  exit 2
+fi
+
+exec "$REPO_ROOT/bin/iread" "$@"
