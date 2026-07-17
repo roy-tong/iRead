@@ -4,6 +4,28 @@
 
 iRead **没有内置或限定任何订阅领域**。一个订阅可以同时包含用户指定的任意一个或多个行业、学科和研究主题；共用信源会自动去重，并保留全部领域归属。仓库根目录的 `config/` 是维护者正在使用的公开示例实例，不是产品默认领域，也不会成为新订阅的候选范围。
 
+## 快速开始
+
+当前 Beta 版优先支持 macOS 上的 Codex。打开终端并运行一行命令：
+
+```bash
+git clone https://github.com/roy-tong/iRead.git ~/iRead && cd ~/iRead && scripts/install.sh codex
+```
+
+安装完成后新建一个 Codex 任务，直接输入一个或多个关注领域，例如：
+
+```text
+帮我订阅医疗器械监管、新能源电力市场和独立游戏发行。
+```
+
+Codex 会完成领域展开、信源提案和代表作品检查；只有在你明确批准后，才会创建订阅、回补数据并安装定时任务。完整本地验收步骤见 [`docs/local-testing.md`](docs/local-testing.md)。
+
+WorkBuddy 用户需要先克隆本仓库，再把本机 WorkBuddy 源码目录传给安装脚本：
+
+```bash
+cd ~/iRead && scripts/install.sh workbuddy /absolute/path/to/work-buddy
+```
+
 ## 第一阶段产品形态
 
 本项目以“完整代码仓 + 稳定 CLI”为核心，不做配置 GUI。普通用户不需要自己编写配置文件，而是通过 Codex 插件或 WorkBuddy 工作流用自然语言批量接入：
