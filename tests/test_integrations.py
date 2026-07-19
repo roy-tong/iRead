@@ -5,6 +5,7 @@ import os
 import subprocess
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 
 
@@ -57,6 +58,30 @@ class IntegrationTests(unittest.TestCase):
                 self.assertTrue(
                     (target / "scripts/install-runtime").stat().st_mode & 0o111
                 )
+
+    def test_portable_skill_bundle_is_small_and_contains_no_runtime_data(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            completed = subprocess.run(
+                [str(ROOT / "scripts/build_agent_skill_bundle.sh"), temp_dir],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            bundle = Path(completed.stdout.strip())
+            self.assertLess(bundle.stat().st_size, 50_000)
+            with zipfile.ZipFile(bundle) as archive:
+                names = set(archive.namelist())
+            self.assertIn("iread/SKILL.md", names)
+            self.assertIn("iread/scripts/install-runtime", names)
+            self.assertFalse(
+                any(
+                    part in name
+                    for name in names
+                    for part in (".env", "data/", "logs/", "subscriptions/")
+                )
+            )
+            self.assertTrue((Path(temp_dir) / "SHA256SUMS").is_file())
 
     def test_one_line_workbuddy_installer_detects_project_and_is_rerunnable(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

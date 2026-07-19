@@ -33,7 +33,7 @@ Skill 安装到 `~/.claude/skills/iread`。如果当前会话启动时 `~/.claud
 git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/scripts/install.sh doubao
 ```
 
-安装器将开放 Skill 写入 `~/.agents/skills/iread`。如果当前豆包版本未自动发现该通用目录，在“自定义 Skill”中导入 GitHub Release 附带的 `iread-agent-skill-<version>.zip`。由于豆包尚未公开稳定 CLI 安装规范，这一入口在 Beta 5 中保持实验性。
+安装器将开放 Skill 写入 `~/.agents/skills/iread`。如果当前豆包版本未自动发现该通用目录，在“自定义 Skill”中导入仓库 [`dist/`](../dist/) 目录的 `iread-agent-skill-<version>.zip`。由于豆包尚未公开稳定 CLI 安装规范，这一入口在 Beta 5 中保持实验性。
 
 ## WorkBuddy
 
