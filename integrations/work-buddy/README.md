@@ -5,19 +5,19 @@ This adapter adds a WorkBuddy knowledge-store workflow and `/iread` command for 
 In WorkBuddy, ask the agent:
 
 ```text
-只执行这条命令安装 iRead，不要浏览或分析仓库：git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
+只执行这条命令安装 iRead，不要浏览或分析仓库：git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
 ```
 
 Or paste the same one-line installer into a terminal opened in the WorkBuddy project:
 
 ```bash
-git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
+git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
 ```
 
 The installer downloads or updates iRead, detects the WorkBuddy project, installs the workflow, and runs the iRead environment check. It is safe to rerun for upgrades. If WorkBuddy cannot be detected automatically, pass its project directory once:
 
 ```bash
-~/.iread/install-workbuddy.sh "/absolute/path/to/work-buddy"
+~/.local/share/iread/install-workbuddy.sh "/absolute/path/to/work-buddy"
 ```
 
 Open a new WorkBuddy task after installation and start with `/iread`. The command reads its small local directions file directly, so neither `docs_validate` nor a full `agent_docs_rebuild` is part of normal installation. The installer records the absolute iRead repository path in WorkBuddy's knowledge store, so `IREAD_ROOT` is only needed as a developer override.

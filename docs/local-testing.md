@@ -110,7 +110,7 @@ bin/iread --config-dir <生成目录> \
 iRead 发布到 GitHub 后，在 WorkBuddy 项目目录运行：
 
 ```bash
-git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
+git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
 ```
 
 安装器会定位 WorkBuddy；用户不需要手工复制适配器、分析仓库或重建全量知识库。安装后新建任务并执行：

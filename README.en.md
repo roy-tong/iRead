@@ -56,13 +56,13 @@ Codex will stop for review before creating a subscription, collecting articles, 
 Send one sentence in WorkBuddy:
 
 ```text
-Only run this command to install iRead; do not browse or analyze the repository: git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
+Only run this command to install iRead; do not browse or analyze the repository: git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
 ```
 
 WorkBuddy only needs one deterministic shell action. The terminal fallback is:
 
 ```bash
-git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
+git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
 ```
 
 Open a new WorkBuddy task after installation and run `/iread`. Normal installation does not analyze the repository or rebuild the full WorkBuddy knowledge index.
