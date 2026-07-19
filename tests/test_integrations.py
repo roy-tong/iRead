@@ -126,6 +126,11 @@ class IntegrationTests(unittest.TestCase):
             self.assertIn("workflow: iread-multi-domain-onboard", command.read_text())
             self.assertIn("bin/iread apply-subscription", directions.read_text())
             self.assertIn("bin/iread validate-proposal", directions.read_text())
+            self.assertIn(
+                "activate --approved --install-schedule", directions.read_text()
+            )
+            self.assertIn("acceptance", directions.read_text())
+            self.assertIn("longer than 30 seconds", directions.read_text())
 
     def test_cached_codex_wrapper_resolves_installed_repository_pointer(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -63,6 +63,8 @@ Ask only about missing distinctions that materially alter source selection. Do n
 
 Use WorkBuddy's own research and browsing tools to build one proposal for every manifest domain. The product supports arbitrary domains; do not reuse the repository's maintainer profile, topic taxonomy, or source list unless they are independently relevant to the user's request.
 
+Tell the user which domain is being researched before starting, and report progress after each domain proposal is validated. For any interactive operation that runs longer than 30 seconds, give a concise progress update and preserve completed proposal artifacts so the task can resume without repeating research.
+
 Write each result to `<batch-dir>/proposals/<domain-id>.json`. Follow `schemas/research_proposal.schema.json` and add `batch_profile_id` at the top level with the exact manifest domain id. Every strict proposal needs at least three topics, eight sources, two direct representative-work URLs per source, all five cold-start score dimensions, and exactly the `light`, `standard`, and `deep` report presets.
 
 Prefer primary sources for facts, independent reporting for verification, specialist analysis for interpretation, expert voices for practice, and discovery sources only for leads. Verify URLs with browsing. Preserve uncertainty in `warnings`, `known_gaps`, `score_confidence`, and `conflict_note` rather than inventing certainty.
@@ -108,12 +110,27 @@ bin/iread --config-dir subscriptions/<subscription-id> subscription
 
 ## Activate approved collection
 
-When the user approved collection, run `bin/iread --config-dir <config-dir> activate`.
+When the user explicitly approved collection and recurring reports, run:
+
+```bash
+bin/iread --config-dir <config-dir> \
+  --request-id activate:<subscription-id>:<approval-version> \
+  activate --approved --install-schedule
+```
 
 - On `needs_collector`, run `scripts/setup_collection.sh`, then retry.
 - On `needs_auth`, show the local `auth.qr_image` to the user. The scan must use a WeChat account authorized as an administrator or operator of an Official Account. After scanning, run `activate --wait-for-auth --install-schedule`.
-- If the user has no eligible Official Account access, offer RSS/web-only mode and run `activate --skip-wechat --install-schedule` only after explicit confirmation. Mark the subscription degraded and list skipped WeChat sources.
-- If the user later gains eligible access, run `activate --enable-wechat` to restart QR authorization.
+- If the user has no eligible Official Account access, offer RSS/web-only mode and run `activate --approved --skip-wechat --install-schedule` only after explicit confirmation. Mark the subscription degraded and list skipped WeChat sources.
+- If the user later gains eligible access, run `activate --approved --enable-wechat` to restart QR authorization.
 - On `needs_source_review`, show unresolved matches and correct or remove those sources before retrying.
 
 Use `bin/iread --config-dir <config-dir> activation` for resumable status. Reports remain gated until the initial one-calendar-month collection passes readiness review. Required `web_pending` candidates must produce `active_with_gaps` with their IDs rather than a fully active claim. Metadata-only public archives may be scheduled; never export third-party full text without separately confirmed rights. Never request or transfer WeChat cookies, tokens, passwords, `wx.lic`, or QR screenshots.
+
+Before claiming completion, run both commands and report every failed or warning check:
+
+```bash
+bin/iread workspace
+bin/iread --config-dir <config-dir> acceptance
+```
+
+Only call the onboarding complete when `acceptance` returns `accepted: true`, or when the user explicitly accepts named non-critical warnings. Otherwise state the current resumable status and the next concrete action.

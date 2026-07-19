@@ -94,4 +94,4 @@ Persist and report `needs_auth`, `needs_source_review`, `backfilling`, `readines
 
 ## report
 
-Summarize subscribed and skipped domains, authorization status, backfill progress, readiness, schedule installation, and unresolved sources.
+Run `workspace` and the subscription's `acceptance` check. Summarize subscribed and skipped domains, authorization status, backfill progress, readiness, schedule installation, unresolved sources, and every acceptance warning or failure. Do not claim completion unless acceptance passes or the user explicitly accepts named non-critical warnings.
