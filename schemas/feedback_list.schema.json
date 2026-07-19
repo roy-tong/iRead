@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "iRead Feedback List",
+  "type": "object",
+  "required": ["path", "count", "returned", "invalid_lines", "items"],
+  "properties": {
+    "path": {"type": "string"},
+    "count": {"type": "integer", "minimum": 0},
+    "returned": {"type": "integer", "minimum": 0},
+    "invalid_lines": {"type": "integer", "minimum": 0},
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "version",
+          "id",
+          "subscription_id",
+          "target",
+          "target_id",
+          "rating",
+          "note",
+          "tags",
+          "created_at"
+        ],
+        "properties": {
+          "version": {"type": "integer", "minimum": 1},
+          "id": {"type": "string", "minLength": 1},
+          "subscription_id": {"type": "string", "minLength": 1},
+          "target": {"enum": ["report", "source", "subscription"]},
+          "target_id": {"type": ["string", "null"]},
+          "rating": {"enum": ["up", "down", "neutral"]},
+          "note": {"type": "string"},
+          "tags": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "created_at": {"type": "string", "format": "date-time"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

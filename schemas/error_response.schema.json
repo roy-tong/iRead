@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "iRead Structured Error",
+  "type": "object",
+  "required": ["status", "command", "request_id", "error"],
+  "properties": {
+    "status": {"const": "error"},
+    "command": {"type": "string", "minLength": 1},
+    "request_id": {"type": ["string", "null"]},
+    "error": {
+      "type": "object",
+      "required": ["code", "type", "message"],
+      "properties": {
+        "code": {
+          "enum": [
+            "approval_required",
+            "not_found",
+            "invalid_request",
+            "timeout",
+            "execution_failed",
+            "internal_error"
+          ]
+        },
+        "type": {"type": "string", "minLength": 1},
+        "message": {"type": "string"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

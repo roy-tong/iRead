@@ -12,6 +12,7 @@ from . import __version__
 from .ingest import werss_wechat_auth_status
 from .settings import Settings
 from .subscriptions import PRODUCT_NAME
+from .workspace import iread_home
 
 
 def _codex_path(settings: Settings) -> str:
@@ -69,6 +70,11 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
         settings.root / "bin/iread",
         settings.schema_dir / "research_proposal.schema.json",
         settings.schema_dir / "subscription_manifest.schema.json",
+        settings.schema_dir / "agent_capabilities.schema.json",
+        settings.schema_dir / "acceptance.schema.json",
+        settings.schema_dir / "error_response.schema.json",
+        settings.schema_dir / "operation_events.schema.json",
+        settings.schema_dir / "feedback_list.schema.json",
         settings.prompt_dir / "propose.md",
     ]
     missing = [str(path) for path in required_paths if not path.exists()]
@@ -110,6 +116,20 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
                 "codex_cli",
                 "pass" if codex else "fail",
                 codex or "Codex CLI not found",
+                required=True,
+            )
+        )
+        registry_home = iread_home()
+        registry_ready = registry_home.is_dir() and os.access(
+            registry_home, os.W_OK
+        )
+        checks.append(
+            _entry(
+                "subscription_registry",
+                "pass" if registry_ready else "fail",
+                str(registry_home)
+                if registry_ready
+                else f"not writable: {registry_home}",
                 required=True,
             )
         )

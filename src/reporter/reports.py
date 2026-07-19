@@ -11,6 +11,7 @@ from zoneinfo import ZoneInfo
 from .analysis import run_codex_json
 from .audit import coverage_audit
 from .db import Database, now_ts
+from .feedback import feedback_for_report
 from .ranking import article_editorial_score, rank_event_clusters
 from .settings import Settings
 
@@ -390,6 +391,7 @@ def generate_report(
             for cluster in event_clusters[:max_clusters]
         ],
         "history_context": history_context,
+        "user_feedback": feedback_for_report(settings),
         "articles_included": len(detail_rows),
         "articles_total": len(all_rows),
         "articles": [

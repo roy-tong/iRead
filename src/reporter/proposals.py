@@ -318,6 +318,7 @@ def _reporting_config(
     )
     reporting["history_start"] = history_start
     reporting["strategy_preset"] = preset_id
+    reporting.setdefault("notion", {})["auto_publish"] = False
     article_multipliers = {"daily": 25, "weekly": 60, "monthly": 120}
     for kind in ("daily", "weekly", "monthly"):
         policy = selected[kind]

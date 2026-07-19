@@ -5,6 +5,7 @@ from typing import Any, Dict, List, Mapping, Optional, Sequence
 from zoneinfo import ZoneInfo
 
 from .db import Database
+from .feedback import list_feedback
 from .settings import Settings
 
 
@@ -192,6 +193,11 @@ def review_sources(
     as_of_ts = int(current.timestamp())
     timezone_name = str(settings.reporting.get("timezone", "Asia/Shanghai"))
     configured_sources = {source.wechat_id: source for source in settings.all_sources}
+    source_feedback: Dict[str, List[Dict[str, Any]]] = {}
+    for item in list_feedback(settings, target="source", limit=100)["items"]:
+        target_id = str(item.get("target_id") or "")
+        if target_id:
+            source_feedback.setdefault(target_id, []).append(item)
     fit_priors = policy.get(
         "domain_fit_priors",
         {"required": 85, "preferred": 68, "watch": 50},
@@ -273,6 +279,9 @@ def review_sources(
             warnings.append("实测样本不足，当前评级主要依赖人工先验")
         if str(row["capture_method"]) == "web_pending":
             warnings.append("采集连接器尚未激活")
+        user_feedback = source_feedback.get(str(row["wechat_id"]), [])
+        if any(item.get("rating") == "down" for item in user_feedback):
+            warnings.append("用户对该信源有未处理的负向反馈，调整层级前需要人工确认")
 
         configured = configured_sources.get(str(row["wechat_id"]))
         sources.append(
@@ -312,6 +321,7 @@ def review_sources(
                 "representative_works": _representative_works(
                     db, str(row["wechat_id"]), work_limit, timezone_name
                 ),
+                "user_feedback": user_feedback,
                 "warnings": warnings,
             }
         )
@@ -328,12 +338,13 @@ def review_sources(
             "version": 1,
             "prior_sample_size": prior_samples,
             "overall_weights": weights,
-            "note": "信源画像是先验；文章级相关度、证据、可信度和原创性会随样本量增加逐步接管评级。",
+            "note": "信源画像是先验；文章级实测会随样本量增加逐步接管评级。用户反馈会单独披露，不会未经确认直接改写评分。",
         },
         "summary": {
             "source_count": len(sources),
             "sources_with_articles": sum(item["collection"]["article_count"] > 0 for item in sources),
             "sources_with_observed_quality": sum(item["confidence"]["analyzed_articles"] > 0 for item in sources),
+            "sources_with_user_feedback": sum(bool(item["user_feedback"]) for item in sources),
             "recommended_tiers": tier_counts,
         },
         "sources": sources,

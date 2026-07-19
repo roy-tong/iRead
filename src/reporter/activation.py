@@ -161,6 +161,55 @@ def record_activation_schedule(
     )
 
 
+def activation_approval(settings: Settings) -> Dict[str, Any]:
+    state = load_activation_state(settings) or {}
+    value = state.get("approval") or {}
+    return value if isinstance(value, dict) else {}
+
+
+def record_activation_approval(
+    settings: Settings,
+    *,
+    collection: bool = False,
+    schedule: bool = False,
+    wechat_enable: bool = False,
+) -> Dict[str, Any]:
+    current = load_activation_state(settings) or {}
+    previous = activation_approval(settings)
+    approval = {
+        **previous,
+        "collection": bool(previous.get("collection") or collection),
+        "schedule": bool(previous.get("schedule") or schedule),
+        "wechat_enable": bool(previous.get("wechat_enable") or wechat_enable),
+        "approved_at": datetime.now(
+            ZoneInfo(settings.reporting.get("timezone", "Asia/Shanghai"))
+        ).isoformat(),
+    }
+    return _write_state(
+        settings,
+        str(current.get("status") or "configured"),
+        approval=approval,
+    )
+
+
+def revoke_schedule_approval(settings: Settings) -> Dict[str, Any]:
+    current = load_activation_state(settings) or {}
+    previous = activation_approval(settings)
+    approval = {
+        **previous,
+        "schedule": False,
+        "schedule_revoked_at": datetime.now(
+            ZoneInfo(settings.reporting.get("timezone", "Asia/Shanghai"))
+        ).isoformat(),
+    }
+    return _write_state(
+        settings,
+        str(current.get("status") or "configured"),
+        approval=approval,
+        schedule={"status": "not_installed", "reason": "user_revoked"},
+    )
+
+
 def activate_subscription(
     settings: Settings,
     db: Database,

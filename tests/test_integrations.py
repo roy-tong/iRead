@@ -29,6 +29,29 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual("iread", plugin_dir.name)
         self.assertEqual("iread", manifest["name"])
         self.assertTrue((plugin_dir / "scripts/iread").stat().st_mode & 0o111)
+        self.assertTrue(
+            (plugin_dir / "skills/onboard-research-domains/SKILL.md").is_file()
+        )
+        self.assertTrue((plugin_dir / "skills/manage-iread/SKILL.md").is_file())
+        self.assertIn("Workflow Recovery", manifest["interface"]["capabilities"])
+        self.assertIn("Agent Control Contract", manifest["interface"]["capabilities"])
+        self.assertTrue((ROOT / "scripts/uninstall_schedule.sh").stat().st_mode & 0o111)
+
+    def test_codex_management_skill_covers_status_reports_and_approval(self) -> None:
+        skill_dir = ROOT / "integrations/codex/plugins/iread/skills/manage-iread"
+        skill = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+        metadata = (skill_dir / "agents/openai.yaml").read_text(encoding="utf-8")
+        self.assertIn("../../scripts/iread workspace", skill)
+        self.assertIn("reports --kind <kind> --limit 5", skill)
+        self.assertIn("active_with_gaps", skill)
+        self.assertIn("active_unverified", skill)
+        self.assertIn("Require explicit approval", skill)
+        self.assertIn("--request-id <stable-request-id>", skill)
+        self.assertIn("operations --limit 20", skill)
+        self.assertIn("workspace` and `acceptance", skill)
+        self.assertIn("feedback add", skill)
+        self.assertIn("schedule uninstall --approved", skill)
+        self.assertIn("$manage-iread", metadata)
 
     def test_workbuddy_installer_creates_iread_command_and_workflow(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -77,6 +100,17 @@ class IntegrationTests(unittest.TestCase):
                 text=True,
             )
             self.assertIn("usage: iread", completed.stdout)
+
+            workspace = subprocess.run(
+                [str(wrapper), "workspace"],
+                env={"PATH": "/usr/bin:/bin", "HOME": str(temp), "IREAD_HOME": str(iread_home)},
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            result = json.loads(workspace.stdout)
+            self.assertEqual("iRead", result["product"])
+            self.assertIn("subscriptions", result)
 
 
 if __name__ == "__main__":

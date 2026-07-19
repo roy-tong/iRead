@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "iRead Subscription Acceptance",
+  "type": "object",
+  "required": [
+    "product",
+    "version",
+    "protocol_version",
+    "generated_at",
+    "config_dir",
+    "accepted",
+    "quality",
+    "checks",
+    "summary"
+  ],
+  "properties": {
+    "product": {"const": "iRead"},
+    "version": {"type": "string", "minLength": 1},
+    "protocol_version": {"type": "integer", "minimum": 1},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "config_dir": {"type": "string", "minLength": 1},
+    "accepted": {"type": "boolean"},
+    "quality": {
+      "enum": ["accepted", "accepted_with_warnings", "blocked"]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "status", "required", "detail"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["pass", "warn", "fail"]},
+          "required": {"type": "boolean"},
+          "detail": {"type": "string"},
+          "remediation": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["passed", "warnings", "failed"],
+      "properties": {
+        "passed": {"type": "integer", "minimum": 0},
+        "warnings": {"type": "integer", "minimum": 0},
+        "failed": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

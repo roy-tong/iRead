@@ -24,3 +24,7 @@ printf '%s\n' "$ROOT" > "$IREAD_HOME/repository-root"
 "$ROOT/bin/iread" doctor --surface codex
 
 printf '\niRead is installed for Codex. Start a new Codex task before using it.\n'
+printf 'Try one of these requests:\n'
+printf '  - Use iRead to subscribe to one or more research fields.\n'
+printf '  - Check my iRead subscriptions and continue the safest next step.\n'
+printf '  - Open and summarize my latest iRead daily report.\n'

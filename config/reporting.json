@@ -3,6 +3,7 @@
   "history_start": "2026-01-01T00:00:00+08:00",
   "strategy_preset": "deep_research",
   "notion": {
+    "auto_publish": true,
     "report_parent_titles": {
       "daily": "日报",
       "weekly": "周报",

@@ -4,6 +4,7 @@ import argparse
 import fcntl
 import json
 import logging
+import shlex
 import subprocess
 import sys
 import time
@@ -15,15 +16,20 @@ from typing import Any, Dict, Iterator, Optional
 from .analysis import enrich_pending
 from .activation import (
     REPORT_READY_STATES,
+    activation_approval,
     activate_subscription,
     load_activation_state,
+    record_activation_approval,
     record_activation_schedule,
     refresh_activation_state,
+    revoke_schedule_approval,
 )
 from .audit import audit_markdown, coverage_audit
+from .control import capability_contract, evaluate_acceptance
 from .db import Database
 from .doctor import run_doctor
 from .export import export_public_archive
+from .feedback import list_feedback, record_feedback
 from .ingest import (
     ingest,
     request_backfill,
@@ -35,6 +41,18 @@ from .ingest import (
     werss_wechat_auth_status,
 )
 from .notion import publish_report, verify_notion
+from .operations import (
+    acquire_request_lock,
+    completed_request,
+    error_code,
+    fail_operation,
+    finish_operation,
+    intent_hash,
+    operation_events,
+    release_request_lock,
+    start_operation,
+    validate_request_id,
+)
 from .proposals import (
     apply_research_batch,
     apply_research_proposal,
@@ -46,6 +64,7 @@ from .reports import due_report_kinds, generate_report, report_window
 from .settings import Settings
 from .source_quality import review_sources
 from .subscriptions import PRODUCT_NAME, apply_research_subscription
+from .workspace import inspect_workspace, list_reports, register_subscription
 
 
 LOGGER = logging.getLogger(__name__)
@@ -53,6 +72,23 @@ LOGGER = logging.getLogger(__name__)
 
 class PipelineBusyError(RuntimeError):
     pass
+
+
+class StructuredArgumentParser(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        _json(
+            {
+                "status": "error",
+                "command": self.prog,
+                "request_id": None,
+                "error": {
+                    "code": "invalid_request",
+                    "type": "ArgumentError",
+                    "message": message,
+                },
+            }
+        )
+        raise SystemExit(2)
 
 
 def _json(value: Any) -> None:
@@ -93,8 +129,18 @@ def _as_of(value: Optional[str]) -> Optional[datetime]:
     return datetime.fromisoformat(value.replace("Z", "+00:00")) if value else None
 
 
+def _publish_requested(settings: Settings, args: argparse.Namespace) -> bool:
+    return bool(
+        args.publish
+        or (
+            not args.no_publish
+            and settings.reporting.get("notion", {}).get("auto_publish", False)
+        )
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
+    parser = StructuredArgumentParser(
         prog="iread",
         description="iRead: local professional information subscriptions and reports"
     )
@@ -104,14 +150,82 @@ def build_parser() -> argparse.ArgumentParser:
         help="Optional configuration directory. Missing files fall back to the repository config/ directory.",
     )
     parser.add_argument("--verbose", action="store_true")
-    sub = parser.add_subparsers(dest="command", required=True)
+    parser.add_argument(
+        "--request-id",
+        type=validate_request_id,
+        help="Optional stable Agent request id used to skip a repeated successful mutation",
+    )
+    sub = parser.add_subparsers(
+        dest="command",
+        required=True,
+        parser_class=StructuredArgumentParser,
+    )
 
     sub.add_parser("init", help="Initialize the local research database")
+    sub.add_parser(
+        "capabilities",
+        help="Show the machine-readable Agent capability and permission contract",
+    )
     doctor = sub.add_parser("doctor", help="Check whether iRead is ready to use")
     doctor.add_argument("--surface", choices=["codex", "workbuddy", "cli"], default="codex")
     sub.add_parser("profile", help="Show the active research profile and report policies")
     sub.add_parser("subscription", help="Show the active iRead subscription and domains")
     sub.add_parser("activation", help="Show the persisted onboarding and collection state")
+    workspace = sub.add_parser(
+        "workspace",
+        help="List local subscriptions, reports, state, and recommended next actions",
+    )
+    workspace.add_argument(
+        "--register",
+        action="store_true",
+        help="Register the selected --config-dir for discovery in future Codex tasks",
+    )
+    reports = sub.add_parser("reports", help="List generated local reports")
+    reports.add_argument("--kind", choices=["daily", "weekly", "monthly"])
+    reports.add_argument("--limit", type=int, default=20)
+    sub.add_parser(
+        "acceptance",
+        help="Evaluate whether the selected subscription is operational and report-ready",
+    )
+    operations = sub.add_parser(
+        "operations",
+        help="Show recent local operation audit events",
+    )
+    operations.add_argument("--limit", type=int, default=50)
+    schedule = sub.add_parser(
+        "schedule",
+        help="Inspect or remove recurring background execution",
+    )
+    schedule.add_argument("action", choices=["status", "uninstall"])
+    schedule.add_argument(
+        "--approved",
+        action="store_true",
+        help="Confirm removal of the selected subscription's recurring tasks",
+    )
+    feedback = sub.add_parser(
+        "feedback",
+        help="Record or list local user feedback for future reports",
+    )
+    feedback_actions = feedback.add_subparsers(
+        dest="feedback_action",
+        required=True,
+        parser_class=StructuredArgumentParser,
+    )
+    feedback_add = feedback_actions.add_parser("add")
+    feedback_add.add_argument(
+        "--target", choices=["report", "source", "subscription"], required=True
+    )
+    feedback_add.add_argument("--target-id")
+    feedback_add.add_argument(
+        "--rating", choices=["up", "down", "neutral"], required=True
+    )
+    feedback_add.add_argument("--note")
+    feedback_add.add_argument("--tag", action="append")
+    feedback_list = feedback_actions.add_parser("list")
+    feedback_list.add_argument(
+        "--target", choices=["report", "source", "subscription"]
+    )
+    feedback_list.add_argument("--limit", type=int, default=20)
 
     wechat_auth = sub.add_parser(
         "wechat-auth",
@@ -120,6 +234,11 @@ def build_parser() -> argparse.ArgumentParser:
     wechat_auth.add_argument("action", choices=["status", "start", "wait"])
     wechat_auth.add_argument("--timeout", type=int, default=300)
     wechat_auth.add_argument("--qr-output")
+    wechat_auth.add_argument(
+        "--approved",
+        action="store_true",
+        help="Confirm starting local WeChat authorization",
+    )
 
     activate = sub.add_parser(
         "activate",
@@ -127,6 +246,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     activate.add_argument("--wait-for-auth", action="store_true")
     activate.add_argument("--auth-timeout", type=int, default=300)
+    activate.add_argument(
+        "--approved",
+        action="store_true",
+        help="Confirm collection and any schedule or connector change requested by this command",
+    )
     collection_mode = activate.add_mutually_exclusive_group()
     collection_mode.add_argument(
         "--skip-wechat",
@@ -181,7 +305,9 @@ def build_parser() -> argparse.ArgumentParser:
     report.add_argument("kind", choices=["daily", "weekly", "monthly"])
     report.add_argument("--as-of")
     report.add_argument("--force", action="store_true")
-    report.add_argument("--no-publish", action="store_true")
+    report_publish = report.add_mutually_exclusive_group()
+    report_publish.add_argument("--publish", action="store_true")
+    report_publish.add_argument("--no-publish", action="store_true")
     report.add_argument("--skip-enrich", action="store_true")
 
     publish = sub.add_parser("publish", help="Publish an existing report to Notion")
@@ -280,10 +406,12 @@ def build_parser() -> argparse.ArgumentParser:
 
     sub.add_parser("notion-test", help="Verify Notion credentials and parent page access")
 
-    run = sub.add_parser("run", help="Run sync, enrichment, due reports, and Notion publishing")
+    run = sub.add_parser("run", help="Run sync, enrichment, and due local reports")
     run.add_argument("--as-of")
     run.add_argument("--skip-sync", action="store_true")
-    run.add_argument("--no-publish", action="store_true")
+    run_publish = run.add_mutually_exclusive_group()
+    run_publish.add_argument("--publish", action="store_true")
+    run_publish.add_argument("--no-publish", action="store_true")
     run.add_argument("--max-batches", type=int)
     return parser
 
@@ -296,11 +424,26 @@ def main(argv: Optional[list] = None) -> int:
     )
     _setup_logging(settings, args.verbose)
     db = Database(settings.db_path)
+    request_id = args.request_id
+    operation_intent = intent_hash(
+        {
+            key: value
+            for key, value in vars(args).items()
+            if key not in {"request_id", "verbose", "project_root"}
+        }
+    )
     lock_free_commands = {
         "doctor",
+        "capabilities",
         "profile",
         "subscription",
         "activation",
+        "workspace",
+        "reports",
+        "acceptance",
+        "operations",
+        "schedule",
+        "feedback",
         "wechat-auth",
         "propose",
         "apply-proposal",
@@ -310,11 +453,74 @@ def main(argv: Optional[list] = None) -> int:
         "apply-subscription",
         "notion-test",
     }
-    if args.command not in lock_free_commands:
-        db.initialize(settings.all_sources)
-
+    mutating_commands = {
+        "init",
+        "activate",
+        "sync",
+        "enrich",
+        "subscribe",
+        "sync-workers",
+        "backfill",
+        "refresh-recent",
+        "collect",
+        "report",
+        "publish",
+        "export",
+        "propose",
+        "apply-proposal",
+        "batch-propose",
+        "batch-apply",
+        "apply-subscription",
+        "run",
+    }
+    is_mutating = args.command in mutating_commands or (
+        args.command == "wechat-auth" and args.action != "status"
+    ) or (args.command == "workspace" and args.register) or (
+        args.command == "sources-review" and bool(args.output)
+    ) or (
+        args.command == "feedback" and args.feedback_action == "add"
+    ) or (
+        args.command == "schedule" and args.action == "uninstall"
+    )
+    operation_id: Optional[str] = None
+    request_lock_handle = None
     try:
-        lock = nullcontext() if args.command in lock_free_commands else project_lock(settings)
+        if is_mutating and request_id:
+            request_lock_handle = acquire_request_lock(
+                settings, args.command, request_id
+            )
+        if is_mutating and (
+            previous := completed_request(
+                settings,
+                args.command,
+                request_id,
+                operation_intent,
+            )
+        ):
+            _json(
+                {
+                    "status": "skipped",
+                    "reason": "request_already_completed",
+                    "request_id": request_id,
+                    "previous_operation_id": previous["operation_id"],
+                    "previous_completed_at": previous["at"],
+                }
+            )
+            release_request_lock(request_lock_handle)
+            return 0
+        if is_mutating:
+            operation_id = start_operation(
+                settings,
+                args.command,
+                request_id,
+                operation_intent,
+            )
+        if args.command not in lock_free_commands:
+            db.initialize(settings.all_sources)
+        needs_project_lock = args.command not in lock_free_commands or (
+            args.command == "schedule" and args.action == "uninstall"
+        )
+        lock = project_lock(settings) if needs_project_lock else nullcontext()
         with lock:
             if args.command == "init":
                 _json(
@@ -326,6 +532,8 @@ def main(argv: Optional[list] = None) -> int:
                         "external_sources": len(settings.external_sources),
                     }
                 )
+            elif args.command == "capabilities":
+                _json(capability_contract(settings.root))
             elif args.command == "doctor":
                 _json(run_doctor(settings, args.surface))
             elif args.command == "profile":
@@ -379,10 +587,124 @@ def main(argv: Optional[list] = None) -> int:
                         "config_dir": str(settings.config_dir),
                     }
                 )
+            elif args.command == "workspace":
+                result = inspect_workspace(
+                    settings.root,
+                    selected_config_dir=settings.config_dir
+                    if args.config_dir
+                    else None,
+                )
+                if args.register:
+                    result["registered"] = register_subscription(
+                        settings.config_dir,
+                        settings.root,
+                    )
+                    result = {
+                        **inspect_workspace(
+                            settings.root,
+                            selected_config_dir=settings.config_dir,
+                        ),
+                        "registered": result["registered"],
+                    }
+                _json(result)
+            elif args.command == "reports":
+                _json(
+                    {
+                        "config_dir": str(settings.config_dir),
+                        **list_reports(
+                            settings.db_path,
+                            kind=args.kind,
+                            limit=args.limit,
+                        ),
+                    }
+                )
+            elif args.command == "acceptance":
+                _json(evaluate_acceptance(settings))
+            elif args.command == "operations":
+                _json(operation_events(settings, args.limit))
+            elif args.command == "schedule":
+                workspace = inspect_workspace(
+                    settings.root,
+                    selected_config_dir=settings.config_dir,
+                )
+                selected = next(
+                    (
+                        item
+                        for item in workspace["subscriptions"]
+                        if Path(item["config_dir"]).resolve()
+                        == settings.config_dir.resolve()
+                    ),
+                    None,
+                )
+                if args.action == "status":
+                    _json(
+                        {
+                            "config_dir": str(settings.config_dir),
+                            "schedule": (selected or {}).get("schedule")
+                            or {"status": "not_installed"},
+                        }
+                    )
+                else:
+                    if not args.approved:
+                        raise PermissionError(
+                            "Removing recurring tasks requires explicit approval; rerun with --approved"
+                        )
+                    completed = subprocess.run(
+                        [
+                            str(settings.root / "scripts/uninstall_schedule.sh"),
+                            "--config-dir",
+                            str(settings.config_dir),
+                        ],
+                        text=True,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.PIPE,
+                        check=False,
+                    )
+                    if completed.returncode != 0:
+                        raise RuntimeError(
+                            (completed.stderr or completed.stdout).strip()
+                            or "Schedule removal failed"
+                        )
+                    state = revoke_schedule_approval(settings)
+                    _json(
+                        {
+                            "status": "not_installed",
+                            "config_dir": str(settings.config_dir),
+                            "detail": completed.stdout.strip(),
+                            "activation": state,
+                        }
+                    )
+            elif args.command == "feedback":
+                if args.feedback_action == "add":
+                    _json(
+                        record_feedback(
+                            settings,
+                            target=args.target,
+                            target_id=args.target_id,
+                            rating=args.rating,
+                            note=args.note,
+                            tags=args.tag,
+                        )
+                    )
+                else:
+                    _json(
+                        list_feedback(
+                            settings,
+                            target=args.target,
+                            limit=args.limit,
+                        )
+                    )
             elif args.command == "wechat-auth":
                 if args.action == "status":
                     _json(werss_wechat_auth_status(settings))
                 elif args.action == "start":
+                    if not (
+                        args.approved
+                        or activation_approval(settings).get("collection")
+                    ):
+                        raise PermissionError(
+                            "Starting WeChat authorization requires explicit approval; rerun with --approved"
+                        )
                     _json(
                         start_werss_wechat_auth(
                             settings,
@@ -395,6 +717,30 @@ def main(argv: Optional[list] = None) -> int:
                 else:
                     _json(wait_for_werss_wechat_auth(settings, args.timeout))
             elif args.command == "activate":
+                approval = activation_approval(settings)
+                if not approval.get("collection") and not args.approved:
+                    raise PermissionError(
+                        "Starting collection requires explicit approval; rerun with --approved"
+                    )
+                if args.enable_wechat and not args.approved:
+                    raise PermissionError(
+                        "Enabling WeChat collection requires explicit approval; rerun with --approved"
+                    )
+                if (
+                    args.install_schedule
+                    and not approval.get("schedule")
+                    and not args.approved
+                ):
+                    raise PermissionError(
+                        "Installing a schedule requires explicit approval; rerun with --approved"
+                    )
+                if args.approved:
+                    record_activation_approval(
+                        settings,
+                        collection=True,
+                        schedule=args.install_schedule,
+                        wechat_enable=args.enable_wechat,
+                    )
                 activation = activate_subscription(
                     settings,
                     db,
@@ -506,7 +852,8 @@ def main(argv: Optional[list] = None) -> int:
                 result = generate_report(settings, db, args.kind, as_of, args.force)
                 if finalization is not None:
                     result["finalization"] = finalization
-                if not args.no_publish:
+                publish_requested = _publish_requested(settings, args)
+                if publish_requested:
                     result["notion"] = publish_report(settings, db, int(result["report_id"]), args.force)
                 _json(result)
             elif args.command == "publish":
@@ -621,21 +968,38 @@ def main(argv: Optional[list] = None) -> int:
             elif args.command == "apply-subscription":
                 manifest_path = settings.resolve_path(args.manifest)
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-                _json(
-                    apply_research_subscription(
-                        settings,
-                        manifest,
-                        settings.resolve_path(args.proposals_dir),
-                        settings.resolve_path(args.output_dir),
-                        approved=args.approved,
-                        approve_all=args.approve_all,
-                        subscription_id=args.id,
-                        subscription_name=args.name,
-                        preset_id=args.preset,
-                        history_start=args.history_start,
-                        force=args.force,
-                    )
+                result = apply_research_subscription(
+                    settings,
+                    manifest,
+                    settings.resolve_path(args.proposals_dir),
+                    settings.resolve_path(args.output_dir),
+                    approved=args.approved,
+                    approve_all=args.approve_all,
+                    subscription_id=args.id,
+                    subscription_name=args.name,
+                    preset_id=args.preset,
+                    history_start=args.history_start,
+                    force=args.force,
                 )
+                try:
+                    result["registration"] = {
+                        "status": "registered",
+                        **register_subscription(
+                            Path(result["output_dir"]),
+                            settings.root,
+                        ),
+                    }
+                except OSError as exc:
+                    result["registration"] = {
+                        "status": "warning",
+                        "error": f"{type(exc).__name__}: {exc}",
+                        "recovery_command": (
+                            "bin/iread --config-dir "
+                            f"{shlex.quote(str(result['output_dir']))} "
+                            "workspace --register"
+                        ),
+                    }
+                _json(result)
             elif args.command == "notion-test":
                 _json(verify_notion(settings))
             elif args.command == "run":
@@ -681,21 +1045,41 @@ def main(argv: Optional[list] = None) -> int:
                     )
                     for kind in due_kinds:
                         report = generate_report(settings, db, kind, as_of)
-                        if not args.no_publish and notion_ready:
+                        publish_requested = _publish_requested(settings, args)
+                        if publish_requested and notion_ready:
                             report["notion"] = publish_report(
                                 settings,
                                 db,
                                 int(report["report_id"]),
                             )
-                        elif not args.no_publish:
+                        elif publish_requested:
                             report["notion"] = {
                                 "status": "skipped",
                                 "reason": "Notion is not configured; local report was generated",
                             }
                         result["reports"].append(report)
                 _json(result)
+        if operation_id:
+            finish_operation(
+                settings,
+                operation_id,
+                args.command,
+                request_id,
+                operation_intent,
+            )
+        release_request_lock(request_lock_handle)
         return 0
     except PipelineBusyError as exc:
+        if operation_id:
+            finish_operation(
+                settings,
+                operation_id,
+                args.command,
+                request_id,
+                operation_intent,
+                outcome="pipeline_busy",
+            )
+        release_request_lock(request_lock_handle)
         _json(
             {
                 "status": "skipped",
@@ -705,8 +1089,29 @@ def main(argv: Optional[list] = None) -> int:
         )
         return 0
     except Exception as exc:
+        if operation_id:
+            fail_operation(
+                settings,
+                operation_id,
+                args.command,
+                request_id,
+                operation_intent,
+                exc,
+            )
+        release_request_lock(request_lock_handle)
         LOGGER.exception("Pipeline command failed")
-        print(f"ERROR: {type(exc).__name__}: {exc}", file=sys.stderr)
+        _json(
+            {
+                "status": "error",
+                "command": args.command,
+                "request_id": request_id,
+                "error": {
+                    "code": error_code(exc),
+                    "type": type(exc).__name__,
+                    "message": str(exc),
+                },
+            }
+        )
         return 1
 
 

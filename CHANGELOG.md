@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.0-beta.3 - 2026-07-19
+
+- Added `iread workspace` to discover local subscriptions and expose compact activation, schedule, article, analysis, report, and next-action state for Codex.
+- Added `iread reports` for stable daily, weekly, and monthly report discovery.
+- Added the `manage-iread` Codex skill for recovery, diagnostics, coverage gaps, and local report reading.
+- Registered newly applied subscriptions under `~/.config/iread/subscriptions.json` so new Codex tasks can resume them without path prompts.
+- Added legacy scheduled-configuration detection to avoid repeating activation when older installations already contain articles or reports.
+- Added a machine-readable Agent capability and permission contract plus schema-backed outcome acceptance.
+- Added request-ID idempotency, per-subscription operation journals, stable error codes, and structured recovery state for mutations.
+- Added explicit activation and scheduling approval enforcement, local-only default report delivery for generated subscriptions, and reversible schedule removal that preserves local data.
+- Added report, source, and subscription feedback that is included as editorial preference context in later reports.
+- Documented the Headless execution, Agent control, and human supervision architecture for the Codex-first formal release path.
+
 ## 0.2.0-beta.2 - 2026-07-17
 
 - Added post-approval activation with local WeChat QR authorization and resumable state.

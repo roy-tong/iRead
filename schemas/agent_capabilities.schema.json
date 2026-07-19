@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "iRead Agent Capability Contract",
+  "type": "object",
+  "required": [
+    "product",
+    "version",
+    "protocol_version",
+    "interface",
+    "permission_levels",
+    "schemas",
+    "execution_contract",
+    "capabilities"
+  ],
+  "properties": {
+    "product": {"const": "iRead"},
+    "version": {"type": "string", "minLength": 1},
+    "protocol_version": {"type": "integer", "minimum": 1},
+    "interface": {"const": "structured_cli"},
+    "permission_levels": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "schemas": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "execution_contract": {
+      "type": "object",
+      "required": [
+        "result_format",
+        "error_format",
+        "request_id_option",
+        "request_id_scope",
+        "mutations_audited",
+        "audit_command",
+        "acceptance_command"
+      ],
+      "properties": {
+        "result_format": {"const": "json"},
+        "error_format": {"const": "json"},
+        "request_id_option": {"const": "--request-id"},
+        "request_id_scope": {"type": "string", "minLength": 1},
+        "mutations_audited": {"const": true},
+        "audit_command": {"type": "string", "minLength": 1},
+        "acceptance_command": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "cli",
+          "description",
+          "permissions",
+          "side_effects",
+          "approval",
+          "idempotency"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "cli": {"type": "string", "minLength": 1},
+          "description": {"type": "string", "minLength": 1},
+          "permissions": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "side_effects": {
+            "type": "array",
+            "items": {"type": "string"},
+            "uniqueItems": true
+          },
+          "approval": {"type": "string", "minLength": 1},
+          "idempotency": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

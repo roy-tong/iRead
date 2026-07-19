@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage iRead"
+  short_description: "Resume subscriptions, inspect health, and read reports"
+  default_prompt: "Use $manage-iread to check my subscriptions and show the safest next action."

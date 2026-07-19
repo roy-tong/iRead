@@ -20,6 +20,15 @@ git clone https://github.com/roy-tong/iRead.git ~/iRead && cd ~/iRead && scripts
 
 Codex 会完成领域展开、信源提案和代表作品检查；只有在你明确批准后，才会创建订阅、回补数据并安装定时任务。完整本地验收步骤见 [`docs/local-testing.md`](docs/local-testing.md)。
 
+安装后也可以直接用自然语言继续和管理已有订阅：
+
+```text
+检查我的 iRead 订阅，告诉我现在卡在哪一步。
+继续上次未完成的回补。
+打开并总结我最新的日报。
+检查为什么这周没有生成周报。
+```
+
 WorkBuddy 用户需要先克隆本仓库，再把本机 WorkBuddy 源码目录传给安装脚本：
 
 ```bash
@@ -43,6 +52,8 @@ cd ~/iRead && scripts/install.sh workbuddy /absolute/path/to/work-buddy
 ```
 
 GUI 延后不会造成返工：CLI、JSON Schema、配置目录和审批边界是后续任何桌面或 Web 界面的稳定后端。现有 `research-library` 网页只用于阅读已采集文章，不承担配置职责。完整产品方案见 `docs/product-plan.md`，第一阶段实现边界见 `docs/cli-first-product.md`。
+
+CLI 在 iRead 中是 Agent 的结构化执行层，不是要求普通用户学习的交互界面。Codex 负责恢复上下文、规划和调用能力；用户保留目标、授权、例外决策和结果验收。能力契约、请求幂等、操作审计、验收与反馈闭环见 [`docs/agent-control-plane.md`](docs/agent-control-plane.md)。
 
 日报、周报和月报的信息准入、阅读路由、论点账本和质量指标见 `docs/report-editorial-framework.md`。
 
@@ -93,6 +104,10 @@ scripts/install.sh codex
 ```
 
 安装后新建 Codex 任务，直接提供一个或多个行业名称。插件会完成批量提案和复核，得到明确批准后才调用 CLI 落盘。
+
+插件包含两个能力：`onboard-research-domains` 负责新建多领域订阅，`manage-iread` 负责恢复流程、检查采集与定时任务、定位覆盖缺口和读取本地报告。订阅配置会登记在本机 `~/.config/iread/subscriptions.json`，新任务不需要用户重新提供目录。
+
+Codex 在执行前可以读取 `iread capabilities` 的机器契约，状态变更使用稳定 `--request-id` 防止重复执行，完成后通过 `iread acceptance` 验收。`iread operations` 提供本地操作审计；用户对报告或信源的反馈由 `iread feedback` 保存并用于后续报告。
 
 批准采集后，插件会自动准备本地 We-MP-RSS。需要微信源时，它会在对话中显示二维码；扫码必须使用已绑定某个公众号管理员或运营者权限的微信号。账号边界和无公众号权限方案见 `docs/wechat-authorization.md`。
 
@@ -173,7 +188,8 @@ scripts/install.sh workbuddy /absolute/path/to/work-buddy
 4. 对已生成的订阅启动激活：
 
    ```bash
-   bin/iread --config-dir subscriptions/my-iread activate
+   bin/iread --config-dir subscriptions/my-iread activate \
+     --approved --install-schedule
    ```
 
    返回 `needs_auth` 时展示 `auth.qr_image` 并扫码，然后运行：
@@ -187,10 +203,10 @@ scripts/install.sh workbuddy /absolute/path/to/work-buddy
 
    ```bash
    bin/iread --config-dir subscriptions/my-iread activate \
-     --skip-wechat --install-schedule
+     --approved --skip-wechat --install-schedule
    ```
 
-   以后获得权限后，可以用 `activate --enable-wechat` 恢复微信授权和采集。
+   以后获得权限后，可以用 `activate --approved --enable-wechat` 恢复微信授权和采集。
 
 5. 激活流程会自动进行公众号高置信匹配。也可以先手工预演：
 
@@ -218,10 +234,17 @@ bin/iread enrich --max-batches 2       # 用 Codex 分批标注文章
 bin/iread audit                        # 检查必抓源、历史边界和正文缺失
 bin/iread subscription                 # 查看当前订阅、领域、信源和报告策略
 bin/iread activation                   # 查看授权、回补、就绪和定时任务状态
+bin/iread capabilities                 # 查看 Agent 能力、权限、副作用和幂等契约
+bin/iread workspace                    # 跨 Codex 任务发现订阅和下一步
+bin/iread acceptance                   # 验收采集、覆盖、定时任务和报告交付
+bin/iread operations --limit 20        # 查看本地状态变更审计记录
 bin/iread wechat-auth status           # 只检查本地微信授权状态，不输出凭据
 bin/iread sources-review --output data/source-review.json  # 评级信源并选取代表作
 bin/iread report daily --no-publish    # 只生成本地日报
-bin/iread report weekly                # 生成并发布周报到 Notion
+bin/iread report weekly                # 按本订阅策略生成周报；新订阅默认只保存在本地
+bin/iread report weekly --publish      # 明确发布周报到已配置的 Notion
+bin/iread feedback add --target report --target-id 1 --rating down --note "重复内容太多"
+bin/iread schedule uninstall --approved # 停止定时任务并保留本地数据
 bin/iread backfill --max-accounts 1    # 请求下一批历史分页
 bin/iread export --output-dir public/archive  # 导出可公开归档，默认不含全文
 bin/iread run                          # 执行当天应有的完整流程

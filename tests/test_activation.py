@@ -4,7 +4,7 @@ import json
 import shutil
 import tempfile
 import unittest
-from contextlib import redirect_stderr
+from contextlib import redirect_stderr, redirect_stdout
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class ActivationTests(unittest.TestCase):
     def test_wechat_collection_modes_are_mutually_exclusive(self) -> None:
-        with redirect_stderr(StringIO()):
+        with redirect_stderr(StringIO()), redirect_stdout(StringIO()):
             with self.assertRaises(SystemExit):
                 build_parser().parse_args(
                     ["activate", "--skip-wechat", "--enable-wechat"]
