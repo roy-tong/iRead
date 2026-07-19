@@ -107,19 +107,16 @@ bin/iread --config-dir <生成目录> \
 
 ## 5. WorkBuddy 实验性适配（暂不作为发版门槛）
 
-iRead 发布到 GitHub 后，在另一台电脑运行：
+iRead 发布到 GitHub 后，在 WorkBuddy 项目目录运行：
 
 ```bash
-git clone https://github.com/<owner>/iread.git
-cd iread
-scripts/install.sh workbuddy /absolute/path/to/work-buddy
-scripts/test.sh
+curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install-workbuddy.sh | bash
 ```
 
-然后在 WorkBuddy 中运行 `docs_validate` 和 `agent_docs_rebuild`，新建任务并执行：
+安装器会定位 WorkBuddy 并输出给 Agent 的重载指令；用户不需要手工克隆仓库、复制适配器或执行内部知识库命令。新建任务并执行：
 
 ```text
 /iread 同时订阅城市水务治理、数字人文和消费品供应链
 ```
 
-WorkBuddy 会使用自己的检索能力生成提案，并调用 iRead CLI 校验和落盘；另一台电脑不需要安装 Codex。GitHub 仓库是跨机器分发代码和安装适配器的必要载体，WorkBuddy 目前不会像 Codex marketplace 一样直接安装尚未克隆的本地仓库。
+WorkBuddy 会使用自己的检索能力生成提案，并调用 iRead CLI 校验和落盘；另一台电脑不需要安装 Codex。一行安装器会从 GitHub 获取代码，无需用户先手工克隆仓库。

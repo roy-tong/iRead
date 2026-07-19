@@ -57,6 +57,22 @@ git clone https://github.com/roy-tong/iRead.git ~/iRead && cd ~/iRead && scripts
 
 Codex 会先显示领域地图、候选信源、代表作和报告方案。只有在你明确批准后，iRead 才会创建订阅、回补最近一个自然月的数据并安装定时任务。
 
+### WorkBuddy 一行安装（实验性）
+
+在 WorkBuddy 中发送一句话：
+
+```text
+请从 https://github.com/roy-tong/iRead 安装 iRead，然后用它订阅我关注的多个研究领域。
+```
+
+WorkBuddy 会根据仓库指引执行一行安装器：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install-workbuddy.sh | bash
+```
+
+安装器会自动下载或更新 iRead、定位 WorkBuddy、安装工作流并自检。完成后直接输入 `/iread`。
+
 ## 用户只需要做的三个决策
 
 ```mermaid

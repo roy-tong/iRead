@@ -12,6 +12,40 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class IntegrationTests(unittest.TestCase):
+    def test_one_line_workbuddy_installer_detects_project_and_is_rerunnable(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            fake_iread = temp / "fake-iread"
+            fake_install = fake_iread / "scripts/install.sh"
+            fake_install.parent.mkdir(parents=True)
+            fake_install.write_text(
+                "#!/bin/bash\nprintf '%s\\n' \"$*\" >> \"$INSTALL_CALLS\"\n",
+                encoding="utf-8",
+            )
+            fake_install.chmod(0o755)
+            workbuddy = temp / "Documents/work-buddy"
+            (workbuddy / "knowledge/store").mkdir(parents=True)
+            (workbuddy / ".claude/commands").mkdir(parents=True)
+            calls = temp / "calls.txt"
+            env = {
+                **os.environ,
+                "HOME": str(temp),
+                "IREAD_SOURCE_ROOT": str(fake_iread),
+                "INSTALL_CALLS": str(calls),
+            }
+            installer = ROOT / "install-workbuddy.sh"
+            for _ in range(2):
+                subprocess.run(
+                    [str(installer)],
+                    cwd=workbuddy,
+                    env=env,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+            expected = f"workbuddy {os.path.realpath(workbuddy)} --force"
+            self.assertEqual([expected, expected], calls.read_text().splitlines())
+
     def test_codex_marketplace_points_to_iread_plugin(self) -> None:
         marketplace = json.loads(
             (ROOT / "integrations/codex/.agents/plugins/marketplace.json").read_text(
