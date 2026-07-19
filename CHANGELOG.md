@@ -2,6 +2,8 @@
 
 ## 0.2.0-beta.4 - 2026-07-19
 
+- Rebuilt the repository landing page around a searchable `AI Research Radar & Source Discovery` position, a two-minute quick start, a concise product comparison, and explicit beta boundaries.
+- Added an English README plus package keywords and project URLs for international discovery across AI research assistant, RSS reader, news aggregator, daily digest, and source-discovery searches.
 - Reworked first-run guidance around the three user decisions: research fields, source approval, and report depth.
 - Prevented a clean installation from presenting the maintainer's repository configuration as the user's active subscription.
 - Made the Codex onboarding skill research and author proposals in the current task instead of launching a slow, quota-consuming nested Codex process.

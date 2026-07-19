@@ -5,12 +5,37 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "iread-research"
 version = "0.2.0b4"
-description = "iRead local professional information subscriptions and reports."
+description = "Local-first AI research radar for source discovery, RSS and WeChat collection, and recurring research digests."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
 authors = [{ name = "Tong Xiarui" }]
+keywords = [
+  "ai research assistant",
+  "rss reader",
+  "news aggregator",
+  "daily digest",
+  "source discovery",
+  "knowledge management",
+  "information retrieval",
+  "codex",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: News/Diary",
+  "Topic :: Text Processing :: Indexing",
+]
 dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/roy-tong/iRead"
+Documentation = "https://github.com/roy-tong/iRead#readme"
+Issues = "https://github.com/roy-tong/iRead/issues"
+Source = "https://github.com/roy-tong/iRead"
 
 [project.scripts]
 iread = "reporter.cli:main"

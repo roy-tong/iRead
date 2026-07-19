@@ -1,5 +1,5 @@
-name: iRead subscription request
-description: Request source lists and one reporting setup for one or more fields.
+name: iRead subscription request / 研究订阅申请
+description: Give us a field; get a reviewed source map and report plan. / 只需提供领域。
 title: "[Subscription]: "
 labels:
   - subscription
@@ -7,12 +7,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        Only the fields are required. Maintainers can discover candidate sources and representative works; you do not need to know RSS URLs.
+        Only the fields are required. You do not need to know RSS URLs or authors.
+
+        只需要填写关注领域。你不需要自己查找 RSS、作者或公众号。
   - type: input
     id: field
     attributes:
-      label: Research fields or industries
-      description: List one or more fields using the terms you naturally use.
+      label: Research fields or industries / 研究领域或行业
+      description: List one or more fields using the terms you naturally use. / 可以同时填写多个领域。
       placeholder: Medical-device regulation, energy markets, digital humanities
     validations:
       required: true
