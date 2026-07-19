@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0-beta.4 - 2026-07-19
+
+- Reworked first-run guidance around the three user decisions: research fields, source approval, and report depth.
+- Prevented a clean installation from presenting the maintainer's repository configuration as the user's active subscription.
+- Made the Codex onboarding skill research and author proposals in the current task instead of launching a slow, quota-consuming nested Codex process.
+- Added concise installation progress, missing `CODEX_HOME` preparation, and actionable partial-failure recovery messages.
+- Required strict proposals to cover first-party evidence, expert voices, independent reporting, specialist analysis, and discovery signals.
+- Removed default Python tracebacks from expected CLI failures while preserving structured errors and opt-in verbose diagnostics.
+
 ## 0.2.0-beta.3 - 2026-07-19
 
 - Added `iread workspace` to discover local subscriptions and expose compact activation, schedule, article, analysis, report, and next-action state for Codex.

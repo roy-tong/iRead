@@ -11,24 +11,24 @@ Use the plugin wrapper at `../../scripts/iread`. Resolve paths to absolute paths
 
 1. Locate and check iRead. Run `../../scripts/iread capabilities`, `../../scripts/iread doctor --surface codex`, and `../../scripts/iread workspace` from this skill directory. Honor the returned approval and idempotency contract. The installer records the repository root; if the wrapper still cannot find it, set `IREAD_ROOT` to its absolute path. If an existing subscription has the requested domains or an incomplete activation, show it and ask whether to resume it before creating a duplicate.
 2. Collect one or more research fields. Accept a pasted list, CSV/JSON file, or fields already stated in the conversation. Ask only for missing distinctions that would materially change the sources, such as geography or audience.
-3. Create a JSON batch manifest. Read [references/batch-manifest.md](references/batch-manifest.md) for the schema and defaults. Store working artifacts under `data/onboarding/<batch-id>/` unless the user names another location.
-4. Run the resumable proposal command:
+3. Tell the user what will happen next in plain language: iRead will expand each field, research candidate sources and representative works, then stop for review. Give a short progress update before researching each domain.
+4. Create a JSON batch manifest. Read [references/batch-manifest.md](references/batch-manifest.md) for the schema and defaults. Store working artifacts under `data/onboarding/<batch-id>/` unless the user names another location.
+5. Author each proposal in the current Codex task instead of invoking another Codex process. Read [references/proposal-authoring.md](references/proposal-authoring.md), `<repository_root>/prompts/propose.md`, and the JSON Schema path returned by `capabilities`. Use current web-search tools to verify direct source pages, feeds, identities, and representative works. Write one proposal to `<batch-dir>/proposals/<domain-id>.json`, then run:
 
    ```bash
-   ../../scripts/iread --request-id <batch-proposal-request-id> \
-     batch-propose <manifest.json> \
-     --output-dir <batch-dir>/proposals
+   ../../scripts/iread validate-proposal <proposal.json>
    ```
 
-5. Review every generated proposal before applying it. For each domain, report:
+   Fix validation errors before continuing. This current-task path is required because starting nested `iread batch-propose` Codex jobs is slow, consumes a second quota, and cannot provide useful progress. Use `batch-propose` only as an explicitly disclosed fallback when the current surface has no web research capability.
+6. Review every generated proposal before applying it. Start with a compact domain-level summary, then show the source table. For each domain, report:
    - field and generated domain name;
    - topic coverage and known gaps;
    - source counts by role;
    - source name, homepage, capture method, conflict note, warnings, and preliminary score;
    - two or three representative works with direct URLs.
    Run `../../scripts/iread validate-proposal <proposal.json>` first and fix validation errors before review.
-6. Ask the user to approve domain IDs, one shared `light`, `standard`, or `deep` policy, and whether approval should start local collection plus recurring reports. Explain that WeChat sources require one local QR scan and that metadata-only public archives are generated without third-party full text. Never infer approval from silence and never use `--approve-all` unless the user explicitly approves all domains.
-7. Merge only approved domains into one subscription:
+7. End the review with exact reply examples so a non-technical user knows what to do, such as `批准全部领域，使用标准报告，开始采集` or `删除 <信源名>，其余批准，先不启动采集`. Ask the user to approve domain IDs, one shared `light`, `standard`, or `deep` policy, and whether approval should start local collection plus recurring reports. Explain that WeChat sources require one local QR scan and that metadata-only public archives are generated without third-party full text. Never infer approval from silence and never use `--approve-all` unless the user explicitly approves all domains.
+8. Merge only approved domains into one subscription:
 
    ```bash
    ../../scripts/iread --request-id <apply-request-id> \
@@ -39,7 +39,7 @@ Use the plugin wrapper at `../../scripts/iread`. Resolve paths to absolute paths
    ```
 
    Repeat `--approved` for multiple IDs.
-8. Verify the combined subscription with:
+9. Verify the combined subscription with:
 
    ```bash
    ../../scripts/iread --config-dir subscriptions/<subscription-id> subscription
@@ -47,7 +47,7 @@ Use the plugin wrapper at `../../scripts/iread`. Resolve paths to absolute paths
 
    `apply-subscription` registers the configuration for discovery in future Codex tasks. Confirm it appears in `../../scripts/iread workspace` before continuing.
 
-9. If the user approved activation, run:
+10. If the user approved activation, run:
 
    ```bash
    ../../scripts/iread --config-dir subscriptions/<subscription-id> \
@@ -60,8 +60,8 @@ Use the plugin wrapper at `../../scripts/iread`. Resolve paths to absolute paths
    - If the user has no eligible Official Account access, offer RSS/web-only mode. Use `activate --approved --skip-wechat --install-schedule` only after explicit confirmation and label the result `degraded`.
    - If a user in degraded mode later gains eligible access, use `activate --approved --enable-wechat` to restart the QR authorization flow.
    - On `needs_source_review`, show unresolved matches and edit or remove only those sources before retrying. Never choose an ambiguous account automatically.
-10. Verify resumable progress with `../../scripts/iread --config-dir <config-dir> activation`. Inspect `operations --limit 20` before retrying an uncertain mutation, and reuse the same request ID only for the unchanged intent. Reports remain gated until the initial one-calendar-month collection passes readiness review. `web_pending` sources remain candidates rather than active feeds. If any required candidate is still pending, report `active_with_gaps` and list its ID; never summarize that state as fully `active`.
-11. Run `../../scripts/iread --config-dir <config-dir> acceptance` before declaring setup complete. `accepted_with_warnings` must be explained with its remaining warnings.
+11. Verify resumable progress with `../../scripts/iread --config-dir <config-dir> activation`. After every long step, state the completed stage, elapsed result when available, and the next gate. Inspect `operations --limit 20` before retrying an uncertain mutation, and reuse the same request ID only for the unchanged intent. Reports remain gated until the initial one-calendar-month collection passes readiness review. `web_pending` sources remain candidates rather than active feeds. If any required candidate is still pending, report `active_with_gaps` and list its ID; never summarize that state as fully `active`.
+12. Run `../../scripts/iread --config-dir <config-dir> acceptance` before declaring setup complete. `accepted_with_warnings` must be explained with its remaining warnings.
 
 ## Guardrails
 

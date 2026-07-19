@@ -12,6 +12,16 @@ usage() {
 case "${1:-}" in
   codex)
     [[ $# -eq 1 ]] || { usage; exit 2; }
+    if [[ -n "${CODEX_BIN:-}" ]]; then
+      [[ -x "$CODEX_BIN" ]] || {
+        printf 'Installation stopped: CODEX_BIN is not executable: %s\n' "$CODEX_BIN" >&2
+        exit 2
+      }
+    elif [[ ! -x "/Applications/ChatGPT.app/Contents/Resources/codex" ]] \
+      && ! command -v codex >/dev/null 2>&1; then
+      printf 'Installation stopped: Codex CLI was not found. Open/install Codex, then rerun this command.\n' >&2
+      exit 2
+    fi
     "$ROOT/scripts/prepare_runtime.sh"
     exec "$ROOT/scripts/install_codex_plugin.sh"
     ;;

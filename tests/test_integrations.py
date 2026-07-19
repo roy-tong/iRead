@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import tempfile
 import unittest
@@ -52,6 +53,53 @@ class IntegrationTests(unittest.TestCase):
         self.assertIn("feedback add", skill)
         self.assertIn("schedule uninstall --approved", skill)
         self.assertIn("$manage-iread", metadata)
+
+    def test_codex_onboarding_uses_current_task_research(self) -> None:
+        skill_dir = ROOT / "integrations/codex/plugins/iread/skills/onboard-research-domains"
+        skill = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+        reference = (skill_dir / "references/proposal-authoring.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("current Codex task", skill)
+        self.assertIn("instead of invoking another Codex process", skill)
+        self.assertIn("iread validate-proposal", skill)
+        self.assertIn("批准全部领域", skill)
+        self.assertIn("Do not invoke a nested Codex process", reference)
+
+    def test_codex_installer_creates_codex_home_and_prints_concise_result(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            fake_codex = temp / "codex"
+            fake_codex.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+            fake_codex.chmod(0o755)
+            env = {
+                **os.environ,
+                "HOME": str(temp / "home"),
+                "CODEX_HOME": str(temp / "home/.codex"),
+                "CODEX_BIN": str(fake_codex),
+                "IREAD_HOME": str(temp / "home/.config/iread"),
+                "IREAD_SERVICE_ROOT": str(temp / "service"),
+                "IREAD_DATA_DIR": str(temp / "data"),
+                "IREAD_LOGS_DIR": str(temp / "logs"),
+                "WERSS_BASE_URL": "http://127.0.0.1:9",
+            }
+            completed = subprocess.run(
+                [str(ROOT / "scripts/install_codex_plugin.sh")],
+                env=env,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            self.assertTrue((temp / "home/.codex").is_dir())
+            self.assertIn("iRead is ready", completed.stdout)
+            self.assertIn("did not add any example domain", completed.stdout)
+            self.assertNotIn('"checks"', completed.stdout)
+
+    def test_top_level_installer_preflights_codex_before_runtime_setup(self) -> None:
+        script = (ROOT / "scripts/install.sh").read_text(encoding="utf-8")
+        preflight = script.index("Codex CLI was not found")
+        prepare = script.index('"$ROOT/scripts/prepare_runtime.sh"')
+        self.assertLess(preflight, prepare)
 
     def test_workbuddy_installer_creates_iread_command_and_workflow(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

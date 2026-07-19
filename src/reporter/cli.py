@@ -418,9 +418,26 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: Optional[list] = None) -> int:
     args = build_parser().parse_args(argv)
+    project_root = Path(args.project_root)
+    selected_config_dir = Path(args.config_dir) if args.config_dir else None
+    if args.command == "subscription" and selected_config_dir is None:
+        workspace = inspect_workspace(project_root)
+        recommended = workspace.get("recommended_config_dir")
+        if recommended:
+            selected_config_dir = Path(str(recommended))
+        else:
+            _json(
+                {
+                    "product": PRODUCT_NAME,
+                    "status": "not_configured",
+                    "subscription": None,
+                    "next_action": workspace["next_action"],
+                }
+            )
+            return 0
     settings = Settings.load(
-        Path(args.project_root),
-        Path(args.config_dir) if args.config_dir else None,
+        project_root,
+        selected_config_dir,
     )
     _setup_logging(settings, args.verbose)
     db = Database(settings.db_path)
@@ -1099,7 +1116,10 @@ def main(argv: Optional[list] = None) -> int:
                 exc,
             )
         release_request_lock(request_lock_handle)
-        LOGGER.exception("Pipeline command failed")
+        if args.verbose:
+            LOGGER.exception("Pipeline command failed")
+        else:
+            LOGGER.debug("Pipeline command failed", exc_info=True)
         _json(
             {
                 "status": "error",

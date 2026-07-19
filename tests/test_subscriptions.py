@@ -45,11 +45,18 @@ def _report_presets():
     ]
 
 
-def _source(source_id: str, name: str, *, feed_url: str = "", platform_id: str = ""):
+def _source(
+    source_id: str,
+    name: str,
+    *,
+    feed_url: str = "",
+    platform_id: str = "",
+    role: str = "primary_source",
+):
     return {
         "id": source_id,
         "name": name,
-        "role": "primary_source",
+        "role": role,
         "source_type": "first_party",
         "homepage_url": "https://example.com",
         "feed_url": feed_url,
@@ -256,17 +263,46 @@ class SubscriptionTests(unittest.TestCase):
         self.assertIn("apply-subscription", help_text)
 
     def test_strict_proposal_validation_is_domain_agnostic(self) -> None:
+        roles = [
+            "primary_source",
+            "expert_voice",
+            "independent_reporting",
+            "specialist_analysis",
+            "discovery_signal",
+        ]
         proposal = _proposal(
             "urban-water",
             "城市水务治理",
             [
-                _source(f"water-{index}", f"水务信源 {index}", feed_url=f"https://example.com/{index}.xml")
+                _source(
+                    f"water-{index}",
+                    f"水务信源 {index}",
+                    feed_url=f"https://example.com/{index}.xml",
+                    role=roles[index % len(roles)],
+                )
                 for index in range(8)
             ],
         )
         result = validate_research_proposal(proposal)
         self.assertEqual("valid", result["status"])
         self.assertEqual(8, result["sources"])
+        self.assertEqual(sorted(roles), result["source_roles"])
+
+    def test_strict_proposal_validation_rejects_missing_source_roles(self) -> None:
+        proposal = _proposal(
+            "urban-water",
+            "城市水务治理",
+            [
+                _source(
+                    f"water-{index}",
+                    f"水务信源 {index}",
+                    feed_url=f"https://example.com/{index}.xml",
+                )
+                for index in range(8)
+            ],
+        )
+        with self.assertRaisesRegex(ValueError, "missing: discovery_signal"):
+            validate_research_proposal(proposal)
 
 
 if __name__ == "__main__":

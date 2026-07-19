@@ -12,7 +12,7 @@ from . import __version__
 from .ingest import werss_wechat_auth_status
 from .settings import Settings
 from .subscriptions import PRODUCT_NAME
-from .workspace import iread_home
+from .workspace import active_config_dir, iread_home, is_registered
 
 
 def _codex_path(settings: Settings) -> str:
@@ -54,8 +54,20 @@ def _werss_status(settings: Settings) -> Dict[str, str]:
         }
 
 
+def _has_user_configuration(settings: Settings) -> bool:
+    """Distinguish a selected subscription from the repository example config."""
+    default_config = (settings.root / "config").resolve()
+    if settings.config_dir.resolve() != default_config:
+        return True
+    if is_registered(settings.config_dir):
+        return True
+    scheduled = active_config_dir(settings.root)
+    return bool(scheduled and scheduled == settings.config_dir.resolve())
+
+
 def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
     checks: List[Dict[str, Any]] = []
+    subscription_configured = _has_user_configuration(settings)
     python_ok = sys.version_info >= (3, 9)
     checks.append(
         _entry(
@@ -99,15 +111,25 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
         )
     )
 
-    domains = settings.profile.domains or list(settings.topics.get("topics", []))
-    checks.append(
-        _entry(
-            "active_configuration",
-            "pass",
-            f"{settings.profile.name}; {len(domains)} domain(s); {len(settings.all_sources)} source(s)",
-            required=True,
+    if subscription_configured:
+        domains = settings.profile.domains or list(settings.topics.get("topics", []))
+        checks.append(
+            _entry(
+                "active_configuration",
+                "pass",
+                f"{settings.profile.name}; {len(domains)} domain(s); {len(settings.all_sources)} source(s)",
+                required=True,
+            )
         )
-    )
+    else:
+        checks.append(
+            _entry(
+                "subscription_configuration",
+                "pass",
+                "no user subscription yet; repository config is an example and will not be activated",
+                required=True,
+            )
+        )
 
     if surface == "codex":
         codex = _codex_path(settings)
@@ -199,8 +221,10 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
         "version": __version__,
         "surface": surface,
         "status": "blocked" if required_failures else "ready",
+        "subscription_configured": subscription_configured,
         "ready_for_domain_setup": not required_failures,
-        "ready_for_collection": not required_failures
+        "ready_for_collection": subscription_configured
+        and not required_failures
         and (
             any(source.capture_method == "rss" for source in settings.external_sources)
             or bool(wechat_sources and wechat_authorized)

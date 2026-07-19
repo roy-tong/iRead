@@ -14,6 +14,7 @@ from unittest import mock
 from reporter.cli import _publish_requested, build_parser, main
 from reporter.control import capability_contract, evaluate_acceptance
 from reporter.db import Database
+from reporter.doctor import run_doctor
 from reporter.feedback import list_feedback, record_feedback
 from reporter.operations import completed_request, operation_events
 from reporter.proposals import _reporting_config
@@ -57,6 +58,77 @@ class ControlPlaneTests(unittest.TestCase):
             schema = json.loads((ROOT / "schemas" / name).read_text(encoding="utf-8"))
             self.assertEqual("object", schema["type"])
 
+    def test_doctor_does_not_treat_repository_example_as_user_subscription(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            with mock.patch.dict(
+                os.environ,
+                {
+                    "IREAD_HOME": str(temp / "iread-home"),
+                    "IREAD_SERVICE_ROOT": str(temp / "service"),
+                    "IREAD_DATA_DIR": str(temp / "data"),
+                    "IREAD_LOGS_DIR": str(temp / "logs"),
+                },
+                clear=False,
+            ), mock.patch(
+                "reporter.doctor._werss_status",
+                return_value={"status": "warn", "detail": "not installed"},
+            ):
+                settings = Settings.load(ROOT)
+                result = run_doctor(settings, "cli")
+        self.assertEqual("ready", result["status"])
+        self.assertFalse(result["subscription_configured"])
+        self.assertFalse(result["ready_for_collection"])
+        checks = {item["name"]: item for item in result["checks"]}
+        self.assertNotIn("active_configuration", checks)
+        self.assertIn("subscription_configuration", checks)
+        self.assertIn("will not be activated", checks["subscription_configuration"]["detail"])
+
+    def test_doctor_recognizes_explicit_subscription_configuration(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            with mock.patch.dict(
+                os.environ,
+                {
+                    "IREAD_HOME": str(temp / "iread-home"),
+                    "IREAD_SERVICE_ROOT": str(temp / "service"),
+                },
+                clear=False,
+            ), mock.patch(
+                "reporter.doctor._werss_status",
+                return_value={"status": "warn", "detail": "not installed"},
+            ):
+                settings = self._settings(temp)
+                result = run_doctor(settings, "cli")
+        self.assertTrue(result["subscription_configured"])
+        self.assertIn(
+            "active_configuration",
+            {item["name"] for item in result["checks"]},
+        )
+
+    def test_subscription_command_does_not_show_example_for_empty_user(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            stdout = StringIO()
+            with mock.patch.dict(
+                os.environ,
+                {
+                    "IREAD_HOME": str(temp / "iread-home"),
+                    "IREAD_SERVICE_ROOT": str(temp / "service"),
+                    "IREAD_DATA_DIR": str(temp / "data"),
+                    "IREAD_LOGS_DIR": str(temp / "logs"),
+                },
+                clear=False,
+            ), redirect_stdout(stdout), redirect_stderr(StringIO()):
+                exit_code = main(
+                    ["--project-root", str(ROOT), "subscription"]
+                )
+        self.assertEqual(0, exit_code)
+        result = json.loads(stdout.getvalue())
+        self.assertEqual("not_configured", result["status"])
+        self.assertIsNone(result["subscription"])
+        self.assertEqual("start_onboarding", result["next_action"]["id"])
+
     def test_acceptance_blocks_unstarted_subscription(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp = Path(temp_dir)
@@ -96,7 +168,8 @@ class ControlPlaneTests(unittest.TestCase):
             ):
                 settings = self._settings(temp)
                 stdout = StringIO()
-                with redirect_stdout(stdout), redirect_stderr(StringIO()):
+                stderr = StringIO()
+                with redirect_stdout(stdout), redirect_stderr(stderr):
                     exit_code = main(
                         [
                             "--project-root",
@@ -107,6 +180,7 @@ class ControlPlaneTests(unittest.TestCase):
                         ]
                     )
             self.assertEqual(1, exit_code)
+            self.assertEqual("", stderr.getvalue())
             result = json.loads(stdout.getvalue())
             self.assertEqual("PermissionError", result["error"]["type"])
             self.assertIn("--approved", result["error"]["message"])

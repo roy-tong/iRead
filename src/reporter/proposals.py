@@ -137,6 +137,7 @@ def validate_research_proposal(
         "specialist_analysis",
         "discovery_signal",
     }
+    observed_roles = set()
     for index, source in enumerate(sources):
         prefix = f"sources[{index}]"
         if not isinstance(source, Mapping):
@@ -148,6 +149,8 @@ def validate_research_proposal(
         role = str(source.get("role") or "")
         if role not in allowed_roles:
             errors.append(f"{prefix}.role is invalid: {role or '<empty>'}")
+        else:
+            observed_roles.add(role)
         locators = [
             str(source.get("homepage_url") or ""),
             str(source.get("feed_url") or ""),
@@ -175,6 +178,14 @@ def validate_research_proposal(
                 errors.append(
                     f"{prefix}.representative_works[{work_index}] needs a title and HTTP(S) URL"
                 )
+
+    if strict:
+        missing_roles = sorted(allowed_roles - observed_roles)
+        if missing_roles:
+            errors.append(
+                "sources must cover every source role; missing: "
+                + ", ".join(missing_roles)
+            )
 
     presets = proposal.get("report_presets", [])
     preset_ids = {
@@ -204,6 +215,7 @@ def validate_research_proposal(
         "profile_name": str(profile.get("name")),
         "topics": len(topics),
         "sources": len(sources),
+        "source_roles": sorted(observed_roles),
         "report_presets": sorted(preset_ids),
     }
 
