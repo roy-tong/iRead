@@ -42,15 +42,7 @@ run_codex_step "installing the iRead plugin" \
   "$CODEX_BIN" plugin add iread@iread --json
 
 doctor_json=$("$ROOT/bin/iread" doctor --surface codex)
-if ! printf '%s' "$doctor_json" | python3 -c '
-import json, sys
-result = json.load(sys.stdin)
-if result.get("status") != "ready":
-    failed = [item["detail"] for item in result.get("checks", []) if item.get("status") == "fail"]
-    print("Installation check failed: " + "; ".join(failed), file=sys.stderr)
-    raise SystemExit(1)
-print("  [ok] checking the local runtime")
-'; then
+if ! printf '%s' "$doctor_json" | python3 "$ROOT/scripts/doctor_summary.py"; then
   printf 'Run scripts/install.sh codex again after resolving the check above.\n' >&2
   exit 1
 fi

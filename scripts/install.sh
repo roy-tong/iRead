@@ -6,6 +6,8 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 usage() {
   printf 'Usage:\n' >&2
   printf '  %s codex\n' "$0" >&2
+  printf '  %s claude-code [skill-target]\n' "$0" >&2
+  printf '  %s doubao [skill-target]\n' "$0" >&2
   printf '  %s workbuddy <work-buddy-root> [--force]\n' "$0" >&2
 }
 
@@ -29,27 +31,12 @@ case "${1:-}" in
     [[ $# -ge 2 && $# -le 3 ]] || { usage; exit 2; }
     "$ROOT/scripts/prepare_runtime.sh"
     "$ROOT/integrations/work-buddy/install.sh" "$2" "${3:-}"
-    DOCTOR_RESULT="$("$ROOT/bin/iread" doctor --surface workbuddy)"
-    "${IREAD_PYTHON_BIN:-${PYTHON_BIN:-python3}}" -c '
-import json
-import sys
-
-result = json.load(sys.stdin)
-summary = result.get("summary", {})
-if result.get("status") == "ready":
-    passed = summary.get("passed", 0)
-    warnings = summary.get("warnings", 0)
-    warning_label = "warning" if warnings == 1 else "warnings"
-    print(f"iRead check passed: {passed} passed, {warnings} {warning_label}.")
-    raise SystemExit(0)
-print("iRead check failed:", file=sys.stderr)
-for check in result.get("checks", []):
-    if check.get("status") == "fail":
-        name = check.get("name")
-        detail = check.get("detail")
-        print(f"- {name}: {detail}", file=sys.stderr)
-raise SystemExit(1)
-' <<<"$DOCTOR_RESULT"
+    "$ROOT/bin/iread" doctor --surface workbuddy \
+      | "${IREAD_PYTHON_BIN:-${PYTHON_BIN:-python3}}" "$ROOT/scripts/doctor_summary.py"
+    ;;
+  claude-code|doubao)
+    [[ $# -ge 1 && $# -le 2 ]] || { usage; exit 2; }
+    exec "$ROOT/scripts/install_agent_skill.sh" "$1" "${2:-}"
     ;;
   *)
     usage

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0-beta.5 - 2026-07-19
+
+- Added deterministic, concise installers for Codex, Claude Code, Doubao Professional, and WorkBuddy.
+- Added a portable progressive-disclosure Agent Skill and release ZIP bundle.
+- Removed repository analysis, repeated Doctor calls, and full knowledge-index rebuilds from normal onboarding.
+- Reduced normal Agent startup to one workspace call and delayed capability loading until the first mutation.
+- Added cross-surface installation, rerun, output-size, and skill-layout tests.
+
 ## 0.2.0-beta.4 - 2026-07-19
 
 - Rebuilt the repository landing page around a searchable `AI Research Radar & Source Discovery` position, a two-minute quick start, a concise product comparison, and explicit beta boundaries.

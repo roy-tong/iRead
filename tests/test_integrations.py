@@ -12,6 +12,52 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class IntegrationTests(unittest.TestCase):
+    def test_portable_agent_skill_is_progressive_and_repository_agnostic(self) -> None:
+        skill_root = ROOT / "skills/iread"
+        skill = (skill_root / "SKILL.md").read_text(encoding="utf-8")
+        self.assertLess(len(skill.split()), 220)
+        self.assertIn("references/onboarding.md", skill)
+        self.assertIn("references/management.md", skill)
+        self.assertIn("Do not browse or analyze", skill)
+        self.assertNotIn("doctor --surface", skill)
+        self.assertTrue((skill_root / "scripts/iread").stat().st_mode & 0o111)
+        self.assertTrue(
+            (skill_root / "scripts/install-runtime").stat().st_mode & 0o111
+        )
+
+    def test_claude_and_doubao_installers_are_concise_and_rerunnable(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            env = {
+                **os.environ,
+                "HOME": str(temp),
+                "IREAD_HOME": str(temp / ".config/iread"),
+            }
+            for surface in ("claude-code", "doubao"):
+                target = temp / surface / "iread"
+                for _ in range(2):
+                    completed = subprocess.run(
+                        [
+                            str(ROOT / "scripts/install.sh"),
+                            surface,
+                            str(target),
+                        ],
+                        cwd=ROOT,
+                        env=env,
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    )
+                    self.assertLess(len(completed.stdout), 600)
+                    self.assertIn("iRead check passed:", completed.stdout)
+                    self.assertNotIn('"checks"', completed.stdout)
+                    self.assertNotIn("knowledge-index rebuild", completed.stdout)
+                self.assertTrue((target / "SKILL.md").is_file())
+                self.assertTrue((target / "scripts/iread").stat().st_mode & 0o111)
+                self.assertTrue(
+                    (target / "scripts/install-runtime").stat().st_mode & 0o111
+                )
+
     def test_one_line_workbuddy_installer_detects_project_and_is_rerunnable(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             temp = Path(temp_dir)
@@ -139,8 +185,7 @@ class IntegrationTests(unittest.TestCase):
 
     def test_workbuddy_install_prints_concise_doctor_summary(self) -> None:
         script = (ROOT / "scripts/install.sh").read_text(encoding="utf-8")
-        self.assertIn("DOCTOR_RESULT=", script)
-        self.assertIn("iRead check passed:", script)
+        self.assertIn("scripts/doctor_summary.py", script)
         self.assertNotIn(
             'exec "$ROOT/bin/iread" doctor --surface workbuddy', script
         )

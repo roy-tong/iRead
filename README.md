@@ -4,9 +4,9 @@
 
 [简体中文](#iread-是什么) | [English](README.en.md) | [Quick Start](#两分钟开始) | [Documentation](#文档) | [Contributing](CONTRIBUTING.md)
 
-![Version](https://img.shields.io/badge/version-0.2.0--beta.4-orange)
+![Version](https://img.shields.io/badge/version-0.2.0--beta.5-orange)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Interface](https://img.shields.io/badge/interface-Codex-111111)
+![Interface](https://img.shields.io/badge/interface-Agent%20Skills-111111)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## iRead 是什么
@@ -36,17 +36,17 @@ iRead 是一个开源、本地优先的 **AI 研究助手 / 个人信息雷达**
 ### 1. 准备环境
 
 - macOS
-- [Codex](https://openai.com/codex/) 桌面端或 CLI
+- Codex、Claude Code、豆包专业版办公任务模式或 WorkBuddy 之一
 - Python 3.9+
 - Git
 
 ### 2. 一行安装
 
 ```bash
-git clone https://github.com/roy-tong/iRead.git ~/iRead && cd ~/iRead && scripts/install.sh codex
+git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/scripts/install.sh codex
 ```
 
-看到 `iRead is ready` 后，新建一个 Codex 任务。
+上面是 Codex 命令。Claude Code 将末尾的 `codex` 换成 `claude-code`，豆包专业版换成 `doubao`。WorkBuddy 和豆包 Skill ZIP 导入见 [Agent 安装指南](docs/agent-installation.md)。安装只执行确定性脚本，不需要 Agent 分析仓库或重建全量索引。
 
 ### 3. 用一句话建立订阅
 
@@ -118,9 +118,9 @@ flowchart LR
 
 ## Beta 状态与限制
 
-`0.2.0-beta.4` 用于公开测试，**还不是稳定版**。
+`0.2.0-beta.5` 用于公开测试，**还不是稳定版**。
 
-- 当前优先支持 macOS + Codex。WorkBuddy 适配仍属实验性。
+- 当前运行时优先支持 macOS。Codex 和 Claude Code 有确定性本地安装；豆包专业版和 WorkBuddy 适配仍属实验性。
 - 只有 RSS 和已完成授权的微信源会自动采集；`web_pending` 会被持续披露为覆盖缺口。
 - 微信公众号采集需要用户自己拥有某个公众号的管理员或运营者权限；否则可选择 RSS/网页源模式。
 - 本机需要在定时任务运行时开机并联网。
@@ -140,6 +140,7 @@ flowchart LR
 | 我想要…… | 阅读 |
 | --- | --- |
 | 安装并走完一次测试 | [本地安装与验收](docs/local-testing.md) |
+| 在 Codex、Claude Code、豆包或 WorkBuddy 安装 | [Agent 安装指南](docs/agent-installation.md) |
 | 了解产品逻辑和用户流程 | [产品方案](docs/product-plan.md) |
 | 理解信源评级 | [信源质量策略](docs/source-quality.md) |
 | 理解日报、周报和月报 | [报告编辑框架](docs/report-editorial-framework.md) |

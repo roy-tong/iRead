@@ -9,19 +9,19 @@ Use the plugin wrapper at `../../scripts/iread`. Resolve all returned paths to a
 
 ## Start With State
 
-1. Run `../../scripts/iread capabilities` and honor its permission, approval, side-effect, and idempotency contract.
-2. Run `../../scripts/iread doctor --surface codex`.
-3. Run `../../scripts/iread workspace` before inspecting files or choosing a subscription.
-4. Select a subscription using an explicit user choice first, then `active_schedule`, then `recommended_config_dir`. If multiple subscriptions remain plausible, show their names, domains, status, and config paths and ask which one to use.
-5. If the user gives an unregistered configuration directory, run:
+1. Run `../../scripts/iread workspace` before inspecting files or choosing a subscription. Installation already performed the environment Doctor check; do not repeat it during normal use.
+2. Select a subscription using an explicit user choice first, then `active_schedule`, then `recommended_config_dir`. If multiple subscriptions remain plausible, show their names, domains, status, and config paths and ask which one to use.
+3. If the user gives an unregistered configuration directory, run:
 
    ```bash
    ../../scripts/iread --config-dir <absolute-config-dir> workspace --register
    ```
 
-6. Use the selected absolute `config_dir` in every subsequent command. Never silently fall back to repository `config/` after selecting a subscription.
+4. Use the selected absolute `config_dir` in every subsequent command. Never silently fall back to repository `config/` after selecting a subscription.
 
 ## Execute Mutations
+
+Before the first state-changing command in the current task, run `../../scripts/iread capabilities` and honor its permission, approval, side-effect, and idempotency contract. Do not run it again for unchanged intent.
 
 For every state-changing command, create one stable request ID for the unchanged user intent. Put the global option before the subcommand:
 

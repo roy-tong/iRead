@@ -167,7 +167,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show the machine-readable Agent capability and permission contract",
     )
     doctor = sub.add_parser("doctor", help="Check whether iRead is ready to use")
-    doctor.add_argument("--surface", choices=["codex", "workbuddy", "cli"], default="codex")
+    doctor.add_argument(
+        "--surface",
+        choices=["codex", "claude-code", "doubao", "workbuddy", "cli"],
+        default="codex",
+    )
     sub.add_parser("profile", help="Show the active research profile and report policies")
     sub.add_parser("subscription", help="Show the active iRead subscription and domains")
     sub.add_parser("activation", help="Show the persisted onboarding and collection state")

@@ -1,0 +1,18 @@
+#!/bin/bash
+set -euo pipefail
+
+IREAD_HOME="${IREAD_HOME:-$HOME/.config/iread}"
+POINTER="$IREAD_HOME/repository-root"
+
+if [[ ! -f "$POINTER" ]]; then
+  printf 'iRead runtime is not installed. Run the deterministic installer for this Agent surface.\n' >&2
+  exit 2
+fi
+
+IREAD_ROOT="$(head -n 1 "$POINTER")"
+if [[ ! -x "$IREAD_ROOT/bin/iread" ]]; then
+  printf 'iRead runtime is unavailable at %s. Rerun the installer.\n' "$IREAD_ROOT" >&2
+  exit 2
+fi
+
+exec "$IREAD_ROOT/bin/iread" "$@"

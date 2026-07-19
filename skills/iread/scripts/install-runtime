@@ -1,0 +1,30 @@
+#!/bin/bash
+set -euo pipefail
+
+REPOSITORY_URL="${IREAD_REPOSITORY_URL:-https://github.com/roy-tong/iRead.git}"
+IREAD_ROOT="${IREAD_INSTALL_ROOT:-${XDG_DATA_HOME:-$HOME/.local/share}/iread}"
+IREAD_HOME="${IREAD_HOME:-$HOME/.config/iread}"
+
+command -v git >/dev/null 2>&1 || {
+  printf 'Git is required to install iRead.\n' >&2
+  exit 2
+}
+command -v python3 >/dev/null 2>&1 || {
+  printf 'Python 3 is required to install iRead.\n' >&2
+  exit 2
+}
+
+if [[ -d "$IREAD_ROOT/.git" ]]; then
+  git -C "$IREAD_ROOT" pull --ff-only --quiet
+elif [[ -e "$IREAD_ROOT" ]]; then
+  printf 'Install path exists but is not an iRead repository: %s\n' "$IREAD_ROOT" >&2
+  exit 2
+else
+  mkdir -p "$(dirname "$IREAD_ROOT")"
+  git clone --depth 1 --quiet "$REPOSITORY_URL" "$IREAD_ROOT"
+fi
+
+"$IREAD_ROOT/scripts/prepare_runtime.sh" >/dev/null
+install -d "$IREAD_HOME"
+printf '%s\n' "$(cd "$IREAD_ROOT" && pwd -P)" > "$IREAD_HOME/repository-root"
+printf 'iRead runtime is ready. Run /iread again.\n'

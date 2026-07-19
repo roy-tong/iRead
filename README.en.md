@@ -4,9 +4,9 @@ iRead is an open-source, local-first AI research assistant that discovers high-q
 
 [Simplified Chinese](README.md) | [Quick Start](#quick-start) | [Documentation](#documentation) | [Contributing](CONTRIBUTING.md)
 
-![Version](https://img.shields.io/badge/version-0.2.0--beta.4-orange)
+![Version](https://img.shields.io/badge/version-0.2.0--beta.5-orange)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Interface](https://img.shields.io/badge/interface-Codex-111111)
+![Interface](https://img.shields.io/badge/interface-Agent%20Skills-111111)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
 ## Why iRead
@@ -36,20 +36,22 @@ It is designed for researchers, investors, product managers, students, and indus
 
 ## Quick Start
 
-Requirements: macOS, Codex desktop or CLI, Python 3.9+, and Git.
+Requirements: macOS, Python 3.9+, Git, and Codex, Claude Code, Doubao Professional office-task mode, or WorkBuddy.
 
 ```bash
-git clone https://github.com/roy-tong/iRead.git ~/iRead && cd ~/iRead && scripts/install.sh codex
+git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/scripts/install.sh codex
 ```
 
-After the installer prints `iRead is ready`, start a new Codex task and say:
+This is the Codex command. Replace the final `codex` with `claude-code` or `doubao` for those surfaces. See the [Agent installation guide](docs/agent-installation.md) for WorkBuddy and Doubao ZIP import. Installation is deterministic and does not ask the Agent to analyze the repository or rebuild a full index.
+
+After installation, start a new task and say:
 
 ```text
 Use iRead to follow battery recycling, urban climate adaptation, and pet healthcare.
 Show me the proposed sources and representative works before starting collection.
 ```
 
-Codex will stop for review before creating a subscription, collecting articles, or installing recurring tasks.
+The Agent will stop for review before creating a subscription, collecting articles, or installing recurring tasks.
 
 ### WorkBuddy one-line install (experimental)
 
@@ -102,10 +104,9 @@ New subscriptions generate local Markdown by default. Notion or public publishin
 
 ## Current status
 
-`0.2.0-beta.4` is a public beta, not a stable release.
+`0.2.0-beta.5` is a public beta, not a stable release.
 
-- The supported path is currently macOS + Codex.
-- WorkBuddy integration is experimental.
+- The runtime currently targets macOS. Codex and Claude Code have deterministic local installers; Doubao Professional and WorkBuddy remain experimental adapters.
 - RSS feeds can be collected automatically. Public web candidates remain disclosed as coverage gaps until a connector is available.
 - WeChat collection requires local access to a WeChat Official Account administrator or operator identity. RSS/web-only mode is available without it.
 - The machine must be awake and online when scheduled jobs run.

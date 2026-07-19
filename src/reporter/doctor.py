@@ -165,6 +165,28 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
                 required=True,
             )
         )
+    elif surface in {"claude-code", "doubao"}:
+        if surface == "claude-code":
+            skill_root = Path(
+                os.environ.get(
+                    "CLAUDE_SKILLS_DIR", str(Path.home() / ".claude/skills")
+                )
+            )
+        else:
+            skill_root = Path(
+                os.environ.get(
+                    "DOUBAO_SKILLS_DIR", str(Path.home() / ".agents/skills")
+                )
+            )
+        skill = skill_root / "iread/SKILL.md"
+        checks.append(
+            _entry(
+                "agent_skill",
+                "pass" if skill.is_file() else "fail",
+                str(skill),
+                required=True,
+            )
+        )
 
     werss = _werss_status(settings)
     checks.append(
