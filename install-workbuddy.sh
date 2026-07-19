@@ -4,6 +4,7 @@ set -euo pipefail
 REPOSITORY_URL="${IREAD_REPOSITORY_URL:-https://github.com/roy-tong/iRead.git}"
 INSTALL_ROOT="${IREAD_INSTALL_ROOT:-${XDG_DATA_HOME:-$HOME/.local/share}/iread}"
 EXPLICIT_WORKBUDDY_ROOT="${1:-${WORKBUDDY_ROOT:-}}"
+SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd -P || true)"
 
 fail() {
   printf 'iRead installation stopped: %s\n' "$1" >&2
@@ -85,6 +86,8 @@ WORKBUDDY_ROOT_RESOLVED="$(find_workbuddy_root)"
 if [[ -n "${IREAD_SOURCE_ROOT:-}" ]]; then
   IREAD_ROOT="$(cd "$IREAD_SOURCE_ROOT" && pwd -P)"
   [[ -x "$IREAD_ROOT/scripts/install.sh" ]] || fail "invalid IREAD_SOURCE_ROOT: $IREAD_ROOT"
+elif [[ -x "$SCRIPT_ROOT/scripts/install.sh" ]]; then
+  IREAD_ROOT="$SCRIPT_ROOT"
 elif [[ -d "$INSTALL_ROOT/.git" ]]; then
   IREAD_ROOT="$(cd "$INSTALL_ROOT" && pwd -P)"
   if ! git -C "$IREAD_ROOT" diff --quiet \
@@ -105,5 +108,5 @@ fi
 "$IREAD_ROOT/scripts/install.sh" workbuddy "$WORKBUDDY_ROOT_RESOLVED" --force
 
 printf '\niRead is ready in WorkBuddy.\n'
-printf 'Return to WorkBuddy and say: reload iRead, then use /iread to subscribe to my research fields.\n'
-printf 'WorkBuddy agent: run docs_validate and agent_docs_rebuild now.\n'
+printf 'Open a new WorkBuddy task and run /iread.\n'
+printf 'No repository analysis or full knowledge-index rebuild is required.\n'

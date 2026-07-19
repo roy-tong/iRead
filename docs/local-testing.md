@@ -110,10 +110,10 @@ bin/iread --config-dir <生成目录> \
 iRead 发布到 GitHub 后，在 WorkBuddy 项目目录运行：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install-workbuddy.sh | bash
+git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
 ```
 
-安装器会定位 WorkBuddy 并输出给 Agent 的重载指令；用户不需要手工克隆仓库、复制适配器或执行内部知识库命令。新建任务并执行：
+安装器会定位 WorkBuddy；用户不需要手工复制适配器、分析仓库或重建全量知识库。安装后新建任务并执行：
 
 ```text
 /iread 同时订阅城市水务治理、数字人文和消费品供应链

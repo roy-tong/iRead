@@ -39,4 +39,4 @@ install -m 0644 "$SOURCE_ROOT/.claude/commands/iread.md" "$COMMAND_TARGET"
 printf '%s\n' "$REPO_ROOT" > "$STORE_TARGET/repository-root.txt"
 
 printf 'Installed iRead workflow into %s\n' "$WORK_BUDDY_ROOT"
-printf 'Run docs_validate and agent_docs_rebuild in WorkBuddy before first use.\n'
+printf 'Open a new WorkBuddy task and run /iread. No knowledge-index rebuild is required.\n'

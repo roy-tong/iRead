@@ -1,5 +1,4 @@
 ---
 short: Configure iRead domains
-workflow: iread-multi-domain-onboard
 ---
-Load directions via `mcp__work-buddy__wb_run("agent_docs", {"path": "iread/multi-domain-onboard-directions", "depth": "full"})`, then run the workflow using `$ARGUMENTS` as optional field or manifest context.
+Read `knowledge/store/iread/repository-root.txt`, then read `knowledge/store/iread/multi-domain-onboard-directions.md` directly with the local file tool. Follow those directions using `$ARGUMENTS` as optional field or manifest context. Do not browse or analyze the iRead repository to rediscover installation or usage instructions, and do not rebuild the full WorkBuddy knowledge index.

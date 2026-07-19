@@ -56,14 +56,16 @@ Codex will stop for review before creating a subscription, collecting articles, 
 Send one sentence in WorkBuddy:
 
 ```text
-Install iRead from https://github.com/roy-tong/iRead, then use it to subscribe to my research fields.
+Only run this command to install iRead; do not browse or analyze the repository: git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
 ```
 
-WorkBuddy follows the repository instructions and runs the managed installer. The terminal fallback is:
+WorkBuddy only needs one deterministic shell action. The terminal fallback is:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install-workbuddy.sh | bash
+git -C ~/.iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.iread; ~/.iread/install-workbuddy.sh
 ```
+
+Open a new WorkBuddy task after installation and run `/iread`. Normal installation does not analyze the repository or rebuild the full WorkBuddy knowledge index.
 
 ## The three user decisions
 

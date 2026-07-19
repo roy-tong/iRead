@@ -35,7 +35,7 @@ class IntegrationTests(unittest.TestCase):
             }
             installer = ROOT / "install-workbuddy.sh"
             for _ in range(2):
-                subprocess.run(
+                completed = subprocess.run(
                     [str(installer)],
                     cwd=workbuddy,
                     env=env,
@@ -43,6 +43,8 @@ class IntegrationTests(unittest.TestCase):
                     capture_output=True,
                     text=True,
                 )
+                self.assertIn("No repository analysis", completed.stdout)
+                self.assertNotIn("agent_docs_rebuild", completed.stdout)
             expected = f"workbuddy {os.path.realpath(workbuddy)} --force"
             self.assertEqual([expected, expected], calls.read_text().splitlines())
 
@@ -135,6 +137,14 @@ class IntegrationTests(unittest.TestCase):
         prepare = script.index('"$ROOT/scripts/prepare_runtime.sh"')
         self.assertLess(preflight, prepare)
 
+    def test_workbuddy_install_prints_concise_doctor_summary(self) -> None:
+        script = (ROOT / "scripts/install.sh").read_text(encoding="utf-8")
+        self.assertIn("DOCTOR_RESULT=", script)
+        self.assertIn("iRead check passed:", script)
+        self.assertNotIn(
+            'exec "$ROOT/bin/iread" doctor --surface workbuddy', script
+        )
+
     def test_workbuddy_installer_creates_iread_command_and_workflow(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             workbuddy = Path(temp_dir)
@@ -157,7 +167,10 @@ class IntegrationTests(unittest.TestCase):
             self.assertTrue(directions.exists())
             root_pointer = workbuddy / "knowledge/store/iread/repository-root.txt"
             self.assertEqual(str(ROOT), root_pointer.read_text().strip())
-            self.assertIn("workflow: iread-multi-domain-onboard", command.read_text())
+            command_text = command.read_text()
+            self.assertIn("multi-domain-onboard-directions.md", command_text)
+            self.assertIn("Do not browse or analyze", command_text)
+            self.assertNotIn("mcp__work-buddy__wb_run", command_text)
             self.assertIn("bin/iread apply-subscription", directions.read_text())
             self.assertIn("bin/iread validate-proposal", directions.read_text())
             self.assertIn(
