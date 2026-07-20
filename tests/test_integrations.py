@@ -153,10 +153,12 @@ class IntegrationTests(unittest.TestCase):
         for surface in ("codex", "claude-code", "doubao", "workbuddy"):
             self.assertIn(surface, text)
         command = (
-            "curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install "
+            "set -o pipefail; curl -fsSL "
+            "https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install "
             "| bash -s -- codex"
         )
         self.assertLess(len(command), 120)
+        self.assertIn("pipefail", command)
         self.assertNotIn("git clone", command)
 
     def test_remote_bootstrap_uses_archive_and_preserves_runtime_on_rerun(self) -> None:

@@ -8,7 +8,7 @@ ARCHIVE_URL="${IREAD_ARCHIVE_URL:-https://codeload.github.com/roy-tong/iRead/tar
 case "$SURFACE" in
   codex|claude-code|doubao|workbuddy) ;;
   *)
-    printf 'Usage: curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- <codex|claude-code|doubao|workbuddy>\n' >&2
+    printf 'Usage: set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- <codex|claude-code|doubao|workbuddy>\n' >&2
     exit 2
     ;;
 esac

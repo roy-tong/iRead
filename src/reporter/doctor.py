@@ -188,7 +188,11 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
             )
         )
 
-    werss = _werss_status(settings)
+    werss = (
+        _werss_status(settings)
+        if subscription_configured
+        else {"status": "pass", "detail": "deferred until source approval"}
+    )
     checks.append(
         _entry(
             "wechat_collection",
@@ -197,7 +201,7 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
             required=False,
         )
     )
-    wechat_sources = list(settings.accounts)
+    wechat_sources = list(settings.accounts) if subscription_configured else []
     wechat_authorized = False
     if wechat_sources and werss["status"] == "pass":
         try:
@@ -228,8 +232,10 @@ def run_doctor(settings: Settings, surface: str = "codex") -> Dict[str, Any]:
     checks.append(
         _entry(
             "notion_output",
-            "pass" if notion_ready else "warn",
-            "configured" if notion_ready else "not configured; local Markdown remains available",
+            "pass",
+            "configured"
+            if notion_ready
+            else "local Markdown enabled; Notion is optional and not configured",
             required=False,
         )
     )

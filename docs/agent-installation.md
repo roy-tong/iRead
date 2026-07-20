@@ -12,7 +12,7 @@
 ## Codex
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- codex
+set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- codex
 ```
 
 新建 Codex 任务后直接说“用 iRead 订阅……”。插件通过本地 marketplace 注册，不需要 Agent 读取仓库安装说明。
@@ -20,7 +20,7 @@ curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash 
 ## Claude Code
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- claude-code
+set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- claude-code
 ```
 
 Skill 安装到 `~/.claude/skills/iread`。如果当前会话启动时 `~/.claude/skills` 尚不存在，重启一次 Claude Code；否则可直接输入 `/iread`。
@@ -30,7 +30,7 @@ Skill 安装到 `~/.claude/skills/iread`。如果当前会话启动时 `~/.claud
 办公任务模式允许操作本地电脑时，可执行：
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- doubao
+set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- doubao
 ```
 
 安装器将开放 Skill 写入 `~/.agents/skills/iread`。如果当前豆包版本未自动发现该通用目录，在“自定义 Skill”中导入仓库 [`dist/`](../dist/) 目录的 `iread-agent-skill-<version>.zip`。由于豆包尚未公开稳定 CLI 安装规范，这一入口在 Beta 6 中保持实验性。
@@ -38,7 +38,7 @@ curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash 
 ## WorkBuddy
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- workbuddy
+set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
 ```
 
 安装后新建任务并输入 `/iread`。正常安装不运行 `docs_validate` 或 `agent_docs_rebuild`。

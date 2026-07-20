@@ -39,7 +39,7 @@ It is designed for researchers, investors, product managers, students, and indus
 Requirements: macOS, Python 3.9+, Git, and Codex, Claude Code, Doubao Professional office-task mode, or WorkBuddy.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- codex
+set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- codex
 ```
 
 This is the Codex command. Replace `codex` with `claude-code`, `doubao`, or `workbuddy` for another surface. Installation is deterministic and does not ask the Agent to analyze the repository or rebuild a full index. A Git-only alternative is documented in the [Agent installation guide](docs/agent-installation.md).
@@ -58,13 +58,13 @@ The Agent will stop for review before creating a subscription, collecting articl
 Send one sentence in WorkBuddy:
 
 ```text
-Only run this command to install iRead; do not analyze the repository: curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- workbuddy
+Only run this command to install iRead; do not analyze the repository: set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
 ```
 
 WorkBuddy only needs one deterministic shell action. The terminal fallback is:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- workbuddy
+set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
 ```
 
 Open a new WorkBuddy task after installation and run `/iread`. Normal installation does not analyze the repository or rebuild the full WorkBuddy knowledge index.
