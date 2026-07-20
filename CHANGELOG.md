@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Reworked the Chinese and English repository landing pages around a 60-second first-success path, measured Beta 6 evidence, and explicit support routes.
+- Added a documentation index, privacy-safe support guide, growth strategy, social preview asset, and structured forms for bugs and source contributions.
+- Added a pull-request checklist covering tests, documentation, credentials, private paths, and third-party content rights.
+
 ## 0.2.0-beta.6 - 2026-07-20
 
 - Added a sub-120-character remote installer for Codex, Claude Code, Doubao Professional, and WorkBuddy.

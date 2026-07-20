@@ -1,0 +1,77 @@
+name: Bug report / 问题反馈
+description: Report an installation, collection, scheduling, or report problem. / 反馈安装、采集或报告问题。
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include tokens, cookies, QR codes, WeChat authorization files, or article bodies.
+
+        请勿提交 Token、Cookie、二维码、微信授权文件或文章正文。
+  - type: dropdown
+    id: agent
+    attributes:
+      label: Agent
+      options:
+        - Codex
+        - Claude Code
+        - Doubao Professional / 豆包专业版
+        - WorkBuddy
+        - Direct CLI / 直接使用 CLI
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: iRead version / iRead 版本
+      description: Run `iread capabilities` and copy its version field. / 运行 `iread capabilities` 查看 version 字段。
+      placeholder: 0.2.0-beta.6
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: Failed stage / 出错阶段
+      options:
+        - Installation / 安装
+        - Source proposal / 信源推荐
+        - Approval and activation / 批准与激活
+        - WeChat authorization / 微信授权
+        - Backfill or collection / 回补或采集
+        - Scheduling / 定时任务
+        - Daily, weekly, or monthly report / 报告
+        - Other / 其他
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result / 预期结果
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result and recovery message / 实际结果与恢复提示
+      description: Redact private paths and credentials. / 请隐藏私有路径和凭据。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps / 复现步骤
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Sensitive data / 敏感数据
+      options:
+        - label: I removed credentials, private session data, QR codes, and third-party article bodies. / 我已移除凭据、会话数据、二维码和第三方文章正文。
+          required: true

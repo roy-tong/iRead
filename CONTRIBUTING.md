@@ -2,6 +2,8 @@
 
 iRead welcomes code fixes, source corrections, report-policy improvements, and new domain or subscription proposals.
 
+Use the structured forms for a [subscription request](https://github.com/roy-tong/iRead/issues/new?template=research-profile.yml), [bug report](https://github.com/roy-tong/iRead/issues/new?template=bug-report.yml), or [source correction](https://github.com/roy-tong/iRead/issues/new?template=source-contribution.yml). They ask only for information needed to reproduce or review the change.
+
 ## Propose research fields
 
 Use the GitHub subscription request form. One or more field names are enough to start; regions, languages, audiences, goals, exclusions, target authors, and known sources are optional. Maintainers or agents generate one proposal per field, review them separately, and combine approved fields with `apply-subscription`.

@@ -1,143 +1,124 @@
-# iRead: AI Research Radar & Source Discovery
+# iRead: Name a Field, Get a Trustworthy Research Digest
 
-iRead is an open-source, local-first AI research assistant that discovers high-quality sources for any field, collects RSS and authorized WeChat content, and produces daily, weekly, and monthly research digests.
+**An open-source, local-first AI research assistant that discovers high-quality sources, collects RSS and authorized WeChat content, and produces daily, weekly, and monthly digests.**
 
-[Simplified Chinese](README.md) | [Quick Start](#quick-start) | [Documentation](#documentation) | [Contributing](CONTRIBUTING.md)
+[简体中文](README.md) | [Real deployment](examples/ai-embodied-research/README.md) | [Install guide](docs/agent-installation.md) | [Request a field](https://github.com/roy-tong/iRead/issues/new?template=research-profile.yml)
 
 ![Version](https://img.shields.io/badge/version-0.2.0--beta.6-orange)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Interface](https://img.shields.io/badge/interface-Agent%20Skills-111111)
+![Interface](https://img.shields.io/badge/interface-Codex%20%7C%20Claude%20Code-111111)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-## Why iRead
+You do not need to prepare feeds, authors, or accounts. Tell iRead what you follow. It proposes **sources, representative work, quality signals, and risks** for review, and collects nothing until you approve.
 
-Most AI RSS readers assume that you already know which feeds to follow. iRead starts one step earlier: give it one or more research fields, and it builds a reviewable source map before collecting anything.
+## Start in 60 seconds
 
-iRead helps you:
+Requirements: macOS, Python 3.9+, and Codex or Claude Code. A clean install completed in about five seconds in our public-beta test.
 
-- expand a field into durable topics and event types;
-- discover first-party sources, independent reporting, specialist analysis, expert voices, and discovery signals;
-- review direct source pages, representative works, risks, and preliminary quality scores;
-- collect RSS, public web candidates, and locally authorized WeChat Official Accounts;
-- deduplicate events and separate facts, opinions, inference, and evidence quality;
-- generate daily updates, weekly trend analysis, and monthly structural reviews.
+### 1. Install with one command
 
-It is designed for researchers, investors, product managers, students, and industry professionals who need long-term information tracking without manually building a feed list.
-
-## How it differs from a typical AI RSS reader
-
-| Typical RSS or summarization tool | iRead |
-| --- | --- |
-| You provide the feeds | You provide research fields; iRead proposes sources for review |
-| Summarizes individual articles | Deduplicates events and tracks agreement, disagreement, and change over time |
-| Mixes source types together | Separates first-party evidence, verification, analysis, expert practice, and discovery leads |
-| Focuses on today's links | Uses daily, weekly, and monthly editorial strategies |
-| Often cloud-first | Keeps configuration, articles, and reports local by default |
-
-## Quick Start
-
-Requirements: macOS, Python 3.9+, Git, and Codex, Claude Code, Doubao Professional office-task mode, or WorkBuddy.
+Codex:
 
 ```bash
 set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- codex
 ```
 
-This is the Codex command. Replace `codex` with `claude-code`, `doubao`, or `workbuddy` for another surface. Installation is deterministic and does not ask the Agent to analyze the repository or rebuild a full index. A Git-only alternative is documented in the [Agent installation guide](docs/agent-installation.md).
+For Claude Code, replace the final `codex` with `claude-code`. Doubao Professional and WorkBuddy adapters remain experimental.
 
-After installation, start a new task and say:
+### 2. Open a new Agent task and name your fields
 
 ```text
 Use iRead to follow battery recycling, urban climate adaptation, and pet healthcare.
-Show me the proposed sources and representative works before starting collection.
+Show me the proposed sources and representative works before collecting anything.
 ```
 
-The Agent will stop for review before creating a subscription, collecting articles, or installing recurring tasks.
+### 3. Review and approve
 
-### WorkBuddy one-line install (experimental)
-
-Send one sentence in WorkBuddy:
-
-```text
-Only run this command to install iRead; do not analyze the repository: set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
-```
-
-WorkBuddy only needs one deterministic shell action. The terminal fallback is:
-
-```bash
-set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
-```
-
-Open a new WorkBuddy task after installation and run `/iread`. Normal installation does not analyze the repository or rebuild the full WorkBuddy knowledge index.
-
-## The three user decisions
+iRead presents a separate source portfolio for each field. Remove, replace, or add sources, choose `light`, `standard`, or `deep`, then approve. iRead backfills the previous calendar month and installs local recurring jobs.
 
 ```mermaid
 flowchart LR
-    A["Choose one or more fields"] --> B["Review sources and representative works"]
-    B --> C["Choose light / standard / deep reports"]
+    A["Name one or more fields"] --> B["Review sources and representative work"]
+    B --> C["Choose report depth"]
     C --> D["Approve collection, backfill, and scheduling"]
 ```
 
-Users do not need to prepare RSS URLs, WeChat account lists, JSON files, or cron jobs.
+See the [complete installation guide](docs/agent-installation.md) for Git-only installation and other Agent surfaces.
 
-## Source quality
+## Why iRead exists
 
-A strict proposal must cover five roles:
+The hard part of research monitoring is not summarizing another article. It is deciding **who deserves long-term attention, which reports repeat the same event, and what evidence supports each conclusion**.
+
+| Typical RSS or AI summary tool | iRead |
+| --- | --- |
+| You provide feeds | You provide fields; iRead proposes a source portfolio |
+| Summarizes articles independently | Deduplicates events and tracks agreement, disagreement, and change |
+| Mixes institutions, media, and influencers | Separates primary evidence, verification, analysis, expert practice, and discovery leads |
+| Answers "what was published today?" | Daily detects change, weekly explains evolution, monthly reviews structure |
+| Often cloud-first | Keeps configuration, credentials, articles, and reports local by default |
+
+iRead is for researchers, investors, product managers, students, and industry professionals who need durable monitoring without manually building a feed list.
+
+## How source selection works
+
+A strict proposal covers five roles:
 
 - **Primary sources** for original facts and records.
 - **Independent reporting** for verification.
 - **Specialist analysis** for mechanisms and implications.
-- **Expert voices** for practical knowledge.
-- **Discovery signals** for finding emerging topics, never as sole evidence.
+- **Expert voices** for practical and informal knowledge.
+- **Discovery signals** for emerging topics, never as sole factual evidence.
 
-Scores are conservative cold-start priors, not observed truth. iRead preserves conflicts of interest, collection limitations, and uncertainty. See the [source-quality strategy](docs/source-quality.md).
+Cold-start scores rank candidates; they are not permanent judgments. iRead preserves conflicts of interest, collection limits, and uncertainty. Read the [source-quality method](docs/source-quality.md).
 
 ## Report modes
 
-| Mode | Best for |
-| --- | --- |
-| `light` | Short, high-priority change detection |
-| `standard` | Balanced professional monitoring; the default |
-| `deep` | Research, investment, or strategy work with more evidence and longitudinal review |
+| Mode | Best for | Output |
+| --- | --- | --- |
+| `light` | Critical changes only | Short, high-priority updates |
+| `standard` | Ongoing professional monitoring | Balanced coverage and reading time |
+| `deep` | Research, investment, or strategy | More evidence, disagreement, and longitudinal review |
 
-New subscriptions generate local Markdown by default. Notion or public publishing requires separate explicit approval.
+Daily reports detect new facts and anomalies. Weekly reports merge repeated events and explain evolution. Monthly reports maintain a trend ledger and revisit earlier judgments. New subscriptions produce local Markdown by default.
 
-## Current status
+## What has been verified
 
-`0.2.0-beta.6` is a public beta, not a stable release.
+Beta 6 reports measured results, not synthetic claims:
 
-- The runtime currently targets macOS. Codex and Claude Code have deterministic local installers; Doubao Professional and WorkBuddy remain experimental adapters.
-- RSS feeds can be collected automatically. Public web candidates remain disclosed as coverage gaps until a connector is available.
-- WeChat collection requires local access to a WeChat Official Account administrator or operator identity. RSS/web-only mode is available without it.
-- The machine must be awake and online when scheduled jobs run.
+- A clean Claude Code install completed in about **5 seconds** with no Doctor warnings.
+- A one-month backfill across 15 RSS sources returned in about **11 seconds**; 14 succeeded and 318 articles were imported.
+- A real AI and embodied-intelligence daily report scored **94/100** against the quality rules; analysis coverage remains a known weakness.
+- Codex plugin discovery and Claude Code Skill loading were verified. Doubao Professional and WorkBuddy still need more real-client testing.
 
-See [release readiness](docs/release-readiness.md) and [UX acceptance](docs/ux-acceptance.md) for current gates.
+Read the complete [Beta 6 UX benchmark](docs/ux-benchmark-beta6.md), including failures and limits. The [AI and embodied-intelligence deployment](examples/ai-embodied-research/README.md) discloses 112 configured sources and a sanitized metadata snapshot.
 
-## Privacy and copyright
+## Capabilities and current limits
+
+- One subscription can combine any number of fields; no industries are hard-coded.
+- RSS / Atom, public-web candidates, and authorized WeChat Official Accounts are supported.
+- WeChat collection requires access to an Official Account administrator or operator identity. RSS/web-only mode works without it.
+- Uncollected `web_pending` sources remain visible as coverage gaps.
+- The runtime currently targets macOS, and scheduled jobs require the machine to be awake and online.
+- `0.2.0-beta.6` is a public beta, not a stable release.
+
+## Privacy, copyright, and open-source boundaries
 
 - Configuration, credentials, articles, and reports stay local by default.
-- Public archives contain links, metadata, and structured analysis, not third-party full text.
+- Public archives contain links, metadata, and original structured analysis, not third-party full text.
 - Full-text export requires confirmed republication rights or a compatible license.
 
 The code is available under the [MIT License](LICENSE). See [NOTICE.md](NOTICE.md) and the [open-source publishing policy](docs/open-source-release.md) for third-party components and content boundaries.
 
-## Documentation
+## Get help or contribute
 
-- [Local installation and acceptance](docs/local-testing.md)
-- [Product plan and user journey](docs/product-plan.md)
-- [Source-quality strategy](docs/source-quality.md)
-- [Daily, weekly, and monthly editorial framework](docs/report-editorial-framework.md)
-- [WeChat authorization](docs/wechat-authorization.md)
-- [Advanced customization](docs/customization.md)
-- [Agent permissions and approval boundaries](docs/agent-control-plane.md)
-- [AI and embodied-intelligence reference deployment](examples/ai-embodied-research/README.md)
+| Goal | Start here |
+| --- | --- |
+| Name a field and request a community source map | [Request a subscription](https://github.com/roy-tong/iRead/issues/new?template=research-profile.yml) |
+| Report an installation or runtime problem | [Report a bug](https://github.com/roy-tong/iRead/issues/new?template=bug-report.yml) |
+| Correct or recommend a source | [Contribute a source](https://github.com/roy-tong/iRead/issues/new?template=source-contribution.yml) |
+| Contribute code | [Contributing guide](CONTRIBUTING.md) |
+| Browse technical documentation | [Documentation index](docs/README.md) |
 
-## Development
+Developers can run `scripts/test.sh` and inspect `bin/iread --help`, `bin/iread capabilities`, and `bin/iread workspace`.
 
-```bash
-scripts/test.sh
-```
-
-Use `bin/iread --help`, `bin/iread capabilities`, and `bin/iread workspace` to inspect the structured CLI and local state.
-
-Open an [issue](https://github.com/roy-tong/iRead/issues) to report a problem or request a source map for a new research field. If iRead is useful to you, starring the repository helps other researchers discover it.
+If iRead is useful, starring the repository helps more people who need better research sources discover it.

@@ -1,133 +1,107 @@
-# iRead: AI Research Radar & Source Discovery
+# iRead：说出领域，得到可信的研究日报
 
-**Local-first AI research assistant for source discovery, RSS and WeChat collection, and daily, weekly, and monthly research digests.**
+**开源、本地优先的 AI 研究助手。自动发现高质量信源，采集 RSS 与已授权公众号，并生成日报、周报和月报。**
 
-[简体中文](#iread-是什么) | [English](README.en.md) | [Quick Start](#两分钟开始) | [Documentation](#文档) | [Contributing](CONTRIBUTING.md)
+[English](README.en.md) | [真实案例](examples/ai-embodied-research/README.md) | [安装说明](docs/agent-installation.md) | [提需求](https://github.com/roy-tong/iRead/issues/new?template=research-profile.yml)
 
 ![Version](https://img.shields.io/badge/version-0.2.0--beta.6-orange)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Interface](https://img.shields.io/badge/interface-Agent%20Skills-111111)
+![Interface](https://img.shields.io/badge/interface-Codex%20%7C%20Claude%20Code-111111)
 ![License](https://img.shields.io/badge/license-MIT-blue)
 
-## iRead 是什么
+你不需要先整理 RSS、作者或公众号。只要告诉 iRead 你关注什么，它会先给出**信源、代表作、评分和风险**供你检查；得到批准后才开始采集。
 
-iRead 是一个开源、本地优先的 **AI 研究助手 / 个人信息雷达**。你只需要说出关心的行业或研究领域，iRead 会：
+## 60 秒开始
 
-1. 展开领域与子主题。
-2. 找出官方机构、专业媒体、研究者、从业者和弱信号来源。
-3. 展示每个信源的代表作、评分、风险和采集方式，等你确认。
-4. 采集 RSS、公开网页和已授权的微信公众号。
-5. 去重、评估证据质量，生成日报、周报和月报。
+要求：macOS、Python 3.9+，以及 Codex 或 Claude Code。安装器实测约 5 秒完成全新安装。
 
-**适合：** 需要长期跟踪专业领域，但不想自己整理 RSS、公众号和信源评分的研究者、投资人、产品经理、行业从业者和学生。
+### 1. 一行安装
 
-## 它和普通 RSS / AI 摘要工具有什么不同
-
-| 普通工具 | iRead |
-| --- | --- |
-| 需要用户自己找 RSS 和作者 | 只输入研究领域，自动生成待审核信源清单 |
-| 通常对单篇文章做摘要 | 按事件去重，追踪跨源共识、分歧和趋势变化 |
-| 媒体、官方和个人观点混在一起 | 区分一手证据、独立核验、专业分析、专家经验和发现线索 |
-| 关注“今天发了什么” | 日报看新增，周报看演化，月报看结构性变化和预测回看 |
-| 默认上传到云端 | 配置、文章和报告默认保存在本机 |
-
-## 两分钟开始
-
-### 1. 准备环境
-
-- macOS
-- Codex、Claude Code、豆包专业版办公任务模式或 WorkBuddy 之一
-- Python 3.9+
-- Git
-
-### 2. 一行安装
+Codex：
 
 ```bash
 set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- codex
 ```
 
-上面是 Codex 命令。Claude Code 将末尾的 `codex` 换成 `claude-code`，豆包专业版换成 `doubao`，WorkBuddy 换成 `workbuddy`。安装只执行确定性脚本，不需要 Agent 分析仓库或重建全量索引。不希望使用 `curl | bash` 时，见 [Agent 安装指南](docs/agent-installation.md) 中的 Git 备用命令。
+Claude Code 只需把最后的 `codex` 换成 `claude-code`。豆包专业版和 WorkBuddy 适配仍处于实验阶段。
 
-### 3. 用一句话建立订阅
+### 2. 新建 Agent 任务，说出领域
 
 ```text
 用 iRead 同时订阅医疗器械监管、新能源电力市场和独立游戏发行。
 先推荐信源和代表作，我确认前不要启动采集。
 ```
 
-Codex 会先显示领域地图、候选信源、代表作和报告方案。只有在你明确批准后，iRead 才会创建订阅、回补最近一个自然月的数据并安装定时任务。
+### 3. 检查并批准
 
-### WorkBuddy 一行安装（实验性）
-
-在 WorkBuddy 中发送一句话：
-
-```text
-只执行这条命令安装 iRead，不要分析仓库：set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
-```
-
-WorkBuddy 只需执行一次确定性脚本，不需要读取仓库内容。终端备用命令为：
-
-```bash
-set -o pipefail; curl -fsSL https://cdn.jsdelivr.net/gh/roy-tong/iRead@main/install | bash -s -- workbuddy
-```
-
-安装器会自动更新 iRead、定位 WorkBuddy、安装工作流并自检。完成后新建一个 WorkBuddy 任务，直接输入 `/iread`。不再执行全量知识库检测或重建。
-
-## 用户只需要做的三个决策
+iRead 会按领域展示候选信源及代表作。你可以删除、替换或补充信源，再选择 `light`、`standard` 或 `deep` 报告。批准后，iRead 会回补最近一个自然月并安装本地定时任务。
 
 ```mermaid
 flowchart LR
-    A["输入一个或多个领域"] --> B["检查信源和代表作"]
-    B --> C["选择轻量 / 标准 / 深度报告"]
-    C --> D["批准后采集、回补和定时生成"]
+    A["说出一个或多个领域"] --> B["检查信源与代表作"]
+    B --> C["选择报告深度"]
+    C --> D["批准采集、回补和定时任务"]
 ```
 
-你不需要自己准备 RSS 地址、公众号清单、JSON 或定时任务。
+不希望运行 `curl | bash`，或要安装到其他 Agent？查看 [完整安装说明](docs/agent-installation.md)。
 
-## 信源是怎么选的
+## iRead 解决什么问题
 
-每个领域的严格提案必须覆盖五种角色：
+信息检索真正困难的部分通常不是“总结文章”，而是判断**该长期听谁的、哪些内容互相重复、结论由什么证据支撑**。
+
+| 常见 RSS / AI 摘要工具 | iRead |
+| --- | --- |
+| 用户自己提供订阅源 | 用户提供领域，iRead 生成待审核信源组合 |
+| 逐篇摘要，重复事件反复出现 | 事件级去重，追踪共识、分歧和变化 |
+| 官方、媒体、KOL 混为一谈 | 区分一手证据、独立核验、专业分析、专家经验和发现线索 |
+| 只回答“今天发了什么” | 日报看新增，周报看演化，月报看结构性变化 |
+| 数据通常进入云端 | 配置、凭据、文章和报告默认保留在本机 |
+
+适合需要长期跟踪专业领域的研究者、投资人、产品经理、行业从业者和学生。
+
+## 信源如何选择
+
+严格提案必须覆盖五种角色：
 
 - **一手来源**：政府、监管机构、标准组织、公司原始发布。
-- **独立报道**：用于交叉核验事实。
-- **专业分析**：用于理解行业机制和影响。
-- **专家与从业者**：用于获取实践经验和非公式知识。
-- **发现信号**：用于发现新话题，不直接当作事实证据。
+- **独立报道**：交叉核验事实。
+- **专业分析**：解释机制与影响。
+- **专家与从业者**：补充实践经验和非公式知识。
+- **发现信号**：发现新话题，不能单独支撑事实结论。
 
-冷启动评分只是候选排序，iRead 会保留利益冲突、抓取限制和不确定性，不会把“官方”等同于“所有主张都可信”。详见 [信源质量方法](docs/source-quality.md)。
+冷启动评分只是候选排序，不是对信源的永久判决。iRead 会保留利益冲突、抓取限制和不确定性。详见 [信源质量方法](docs/source-quality.md)。
 
 ## 报告策略
 
-| 模式 | 适合 | 阅读负担 |
+| 模式 | 适合 | 输出特点 |
 | --- | --- | --- |
-| `light` 轻量 | 只想知道关键变化 | 最短，只保留高优先级项 |
-| `standard` 标准 | 长期专业跟踪 | 默认选择，平衡覆盖和时间 |
-| `deep` 深度 | 研究、投资或战略分析 | 更多证据、分歧和跨期回看 |
+| `light` | 只想知道关键变化 | 最短，只保留高优先级项 |
+| `standard` | 长期专业跟踪 | 默认，平衡覆盖与阅读时间 |
+| `deep` | 研究、投资或战略分析 | 更多证据、分歧和跨期回看 |
 
-所有新订阅默认只生成本地 Markdown；Notion 和公开发布都需要额外明确批准。
+日报负责发现新增事实和异常信号；周报合并重复事件、分析演化；月报维护趋势账本并回看此前判断。所有新订阅默认只生成本地 Markdown。
 
-## 支持的能力
+## 已验证的效果
 
-- 任意多领域合并成一个订阅。
-- RSS / Atom、公开网页候选源和已授权微信公众号。
-- 近一个自然月的历史回补。
-- 本地 SQLite 归档、去重、完整性审计和可恢复任务。
-- 日报、周报、月报和本地文章阅读库。
-- Codex 自然语言配置、状态检查、故障恢复和报告阅读。
-- 明确审批边界、幂等请求和本地操作日志。
+Beta 6 的公开验收不是模拟数字：
 
-## Beta 状态与限制
+- 全新 Claude Code 安装约 **5 秒**，Doctor 无警告。
+- 15 个 RSS 源并发回补最近一个自然月，约 **11 秒**返回；14 个成功，导入 318 篇。
+- 一份真实 AI / 具身日报质量规则得分 **94/100**；分析覆盖率仍是明确短板。
+- Codex 插件已实测识别；Claude Code 已验证 Skill 加载。豆包专业版和 WorkBuddy 仍需更多真实客户端验证。
 
-`0.2.0-beta.6` 用于公开测试，**还不是稳定版**。
+完整方法、失败项和边界见 [Beta 6 第三方体验基准](docs/ux-benchmark-beta6.md)。公开的 AI 与具身研究运行案例包含 112 个信源及脱敏元数据快照，见 [参考案例](examples/ai-embodied-research/README.md)。
 
-- 当前运行时优先支持 macOS。Codex 和 Claude Code 有确定性本地安装；豆包专业版和 WorkBuddy 适配仍属实验性。
-- 只有 RSS 和已完成授权的微信源会自动采集；`web_pending` 会被持续披露为覆盖缺口。
-- 微信公众号采集需要用户自己拥有某个公众号的管理员或运营者权限；否则可选择 RSS/网页源模式。
-- 本机需要在定时任务运行时开机并联网。
+## 当前能力与边界
 
-当前验收结果和稳定版门槛见 [发版就绪状态](docs/release-readiness.md) 和 [用户体验验收](docs/ux-acceptance.md)。
+- 支持任意多个领域合并为一个订阅，不内置或限制特定行业。
+- 支持 RSS / Atom、公开网页候选源和已授权微信公众号。
+- 微信采集需要用户拥有某个公众号的管理员或运营者权限；没有权限时可使用 RSS / 网页模式。
+- `web_pending` 会明确显示为覆盖缺口，不伪装成已经采集。
+- 当前运行时优先支持 macOS，定时任务运行时机器需要开机并联网。
+- `0.2.0-beta.6` 是公开 Beta，不是稳定版。
 
-## 数据、隐私与版权
+## 隐私、版权与开源边界
 
 - 配置、凭据、文章和报告默认留在本机。
 - 公开归档默认只包含链接、元数据和结构化分析，不上传第三方全文。
@@ -135,34 +109,16 @@ flowchart LR
 
 代码使用 [MIT License](LICENSE)。第三方组件、信源和内容权利边界见 [NOTICE.md](NOTICE.md) 和 [开源发布说明](docs/open-source-release.md)。
 
-## 文档
+## 需要帮助或参与项目
 
-| 我想要…… | 阅读 |
+| 你想做什么 | 入口 |
 | --- | --- |
-| 安装并走完一次测试 | [本地安装与验收](docs/local-testing.md) |
-| 在 Codex、Claude Code、豆包或 WorkBuddy 安装 | [Agent 安装指南](docs/agent-installation.md) |
-| 查看第三方体验、性能和发版判断 | [Beta 6 体验基准](docs/ux-benchmark-beta6.md) |
-| 了解产品逻辑和用户流程 | [产品方案](docs/product-plan.md) |
-| 理解信源评级 | [信源质量策略](docs/source-quality.md) |
-| 理解日报、周报和月报 | [报告编辑框架](docs/report-editorial-framework.md) |
-| 配置微信授权 | [微信授权说明](docs/wechat-authorization.md) |
-| 手工配置或使用 CLI | [高级定制](docs/customization.md) |
-| 了解 Agent 权限和审批边界 | [Agent 控制面](docs/agent-control-plane.md) |
-| 查看一套真实运行的 AI 与具身研究案例 | [AI 与具身研究标杆案例](examples/ai-embodied-research/README.md) |
-| 贡献代码、信源或订阅领域 | [贡献指南](CONTRIBUTING.md) |
+| 只写领域，让社区协助设计订阅 | [提交订阅需求](https://github.com/roy-tong/iRead/issues/new?template=research-profile.yml) |
+| 安装失败或结果异常 | [报告问题](https://github.com/roy-tong/iRead/issues/new?template=bug-report.yml) |
+| 纠错或推荐高质量信源 | [贡献信源](https://github.com/roy-tong/iRead/issues/new?template=source-contribution.yml) |
+| 参与开发 | [贡献指南](CONTRIBUTING.md) |
+| 查看全部技术文档 | [文档导航](docs/README.md) |
 
-## 开发与验证
+开发者可运行 `scripts/test.sh`，并使用 `bin/iread --help`、`bin/iread capabilities` 和 `bin/iread workspace` 检查结构化能力与本地状态。
 
-```bash
-scripts/test.sh
-```
-
-开发者和 Agent 可以使用 `bin/iread --help`、`bin/iread capabilities` 和 `bin/iread workspace` 查看结构化能力与本地状态。
-
-## 参与项目
-
-- 发现问题：提交 [GitHub Issue](https://github.com/roy-tong/iRead/issues)。
-- 想订阅新领域：Issue 中只需要写下领域名称和关注范围。
-- 想贡献信源或代码：阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
-
-If iRead is useful to you, starring the repository helps other researchers discover it.
+如果 iRead 对你有用，给仓库点一个 Star，会帮助更多需要高质量信息源的人找到它。

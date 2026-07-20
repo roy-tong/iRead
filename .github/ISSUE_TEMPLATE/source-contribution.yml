@@ -1,0 +1,70 @@
+name: Source correction or recommendation / 信源纠错或推荐
+description: Improve a field's source portfolio without submitting article bodies. / 改进某个领域的信源组合。
+title: "[Source]: "
+labels:
+  - source
+body:
+  - type: input
+    id: field
+    attributes:
+      label: Field / 领域
+      placeholder: Medical-device regulation / 医疗器械监管
+    validations:
+      required: true
+  - type: input
+    id: source_name
+    attributes:
+      label: Source or author / 信源或作者
+    validations:
+      required: true
+  - type: input
+    id: homepage
+    attributes:
+      label: First-party homepage / 官方主页
+      placeholder: https://...
+    validations:
+      required: true
+  - type: dropdown
+    id: change
+    attributes:
+      label: Contribution type / 贡献类型
+      options:
+        - Recommend a new source / 推荐新信源
+        - Correct a URL or feed / 修正主页或 Feed
+        - Report ownership or conflict changes / 报告归属或利益冲突变化
+        - Replace representative work / 更新代表作
+        - Report collection failure / 报告采集失败
+    validations:
+      required: true
+  - type: dropdown
+    id: role
+    attributes:
+      label: Source role / 信源角色
+      options:
+        - Primary source / 一手来源
+        - Independent reporting / 独立报道
+        - Specialist analysis / 专业分析
+        - Expert or practitioner / 专家或从业者
+        - Discovery signal / 发现信号
+        - Not sure / 不确定
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Why it belongs, with representative links / 推荐或纠错依据
+      description: Include two or three representative links when possible. Do not paste article bodies. / 尽量提供 2-3 个代表链接，不要粘贴文章正文。
+    validations:
+      required: true
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Affiliations, incentives, or risks / 归属、商业动机或风险
+      placeholder: Publisher, employer, sponsorship, advocacy role, paywall, unstable feed...
+  - type: checkboxes
+    id: rights
+    attributes:
+      label: Content boundary / 内容边界
+      options:
+        - label: I only included links and original descriptions, not credentials or third-party article bodies. / 我只提交链接和原创说明，没有提交凭据或第三方文章正文。
+          required: true
