@@ -5,6 +5,7 @@
 - Reworked the Chinese and English repository landing pages around a 60-second first-success path, measured Beta 6 evidence, and explicit support routes.
 - Added a documentation index, privacy-safe support guide, growth strategy, social preview asset, and structured forms for bugs and source contributions.
 - Added a pull-request checklist covering tests, documentation, credentials, private paths, and third-party content rights.
+- Linked the project to its maintainer profile and public research notes so users can inspect the people and methodology behind iRead.
 
 ## 0.2.0-beta.6 - 2026-07-20
 

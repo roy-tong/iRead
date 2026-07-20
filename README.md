@@ -122,3 +122,7 @@ Beta 6 的公开验收不是模拟数字：
 开发者可运行 `scripts/test.sh`，并使用 `bin/iread --help`、`bin/iread capabilities` 和 `bin/iread workspace` 检查结构化能力与本地状态。
 
 如果 iRead 对你有用，给仓库点一个 Star，会帮助更多需要高质量信息源的人找到它。
+
+## 维护者
+
+iRead 由 [Roy Tong（仝夏瑞）](https://github.com/roy-tong) 发起并维护。更多关于 AI 产品、具身智能与开源研究工具的文章见 [Roy's Notes](https://roy-tong.github.io)。

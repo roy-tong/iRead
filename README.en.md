@@ -122,3 +122,7 @@ The code is available under the [MIT License](LICENSE). See [NOTICE.md](NOTICE.m
 Developers can run `scripts/test.sh` and inspect `bin/iread --help`, `bin/iread capabilities`, and `bin/iread workspace`.
 
 If iRead is useful, starring the repository helps more people who need better research sources discover it.
+
+## Maintainer
+
+iRead is created and maintained by [Roy Tong](https://github.com/roy-tong). Read more about AI products, embodied intelligence, and open-source research tools at [Roy's Notes](https://roy-tong.github.io).
