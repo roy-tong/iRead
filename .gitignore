@@ -4,6 +4,8 @@
 data
 logs
 output
+public/archive
+public/archive-full
 *.db
 *.sqlite
 *.sqlite3

@@ -318,6 +318,77 @@ class PipelineTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 export_public_archive(settings, db, temp / "full", include_content=True)
 
+            with db.connect() as conn:
+                conn.execute(
+                    """
+                    INSERT INTO articles (
+                        id, source_article_id, source_wechat_id, source_name, priority,
+                        title, url, published_at, description, content_html, content_text,
+                        fingerprint, ingested_at, updated_at
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        "article-export-2",
+                        "upstream-2",
+                        "AI_Whitepaper",
+                        "AI产品白皮书",
+                        "required",
+                        "较旧导出测试",
+                        "https://example.com/b",
+                        1784030000,
+                        "也不应进入标杆快照的摘要",
+                        "<p>不应默认公开的正文</p>",
+                        "不应默认公开的正文",
+                        "fingerprint-2",
+                        1784030001,
+                        1784030002,
+                    ),
+                )
+                conn.execute(
+                    """
+                    INSERT INTO reports (
+                        kind, period_start, period_end, title, markdown_path, model,
+                        created_at, notion_url, notion_status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        "daily",
+                        1783987200,
+                        1784073600,
+                        "测试日报",
+                        "/Users/example/private/report.md",
+                        "test-model",
+                        1784073601,
+                        "https://notion.so/private-page",
+                        "complete",
+                    ),
+                )
+
+            sample_result = export_public_archive(
+                settings,
+                db,
+                temp / "sample",
+                articles_per_source=1,
+                include_descriptions=False,
+            )
+            self.assertEqual(1, sample_result["articles"])
+            sample_article = json.loads(
+                (temp / "sample" / "articles.jsonl").read_text(encoding="utf-8").strip()
+            )
+            self.assertNotIn("description", sample_article)
+            sample_report = json.loads(
+                (temp / "sample" / "reports.json").read_text(encoding="utf-8")
+            )["reports"][0]
+            self.assertEqual("report.md", sample_report["markdown_file"])
+            self.assertNotIn("notion_url", sample_report)
+            manifest = json.loads(
+                (temp / "sample" / "manifest.json").read_text(encoding="utf-8")
+            )
+            self.assertEqual("latest_per_source", manifest["sampling"]["strategy"])
+            self.assertFalse(manifest["includes_descriptions"])
+            self.assertEqual(2, manifest["corpus"]["available_articles"])
+            self.assertEqual({"pending": 2}, manifest["corpus"]["analysis_status_counts"])
+
     def test_html_and_url_normalization(self) -> None:
         self.assertEqual("标题\n\n正文", html_to_text("<h1>标题</h1><p>正文<script>x</script></p>"))
         self.assertEqual(

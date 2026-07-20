@@ -327,6 +327,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Required with --include-content after confirming publication rights for every exported source.",
     )
     export.add_argument("--max-content-chars", type=int)
+    export.add_argument(
+        "--articles-per-source",
+        type=int,
+        help="Export only the newest N articles for each source.",
+    )
+    export.add_argument(
+        "--omit-descriptions",
+        action="store_true",
+        help="Exclude publisher-provided descriptions from the public archive.",
+    )
 
     source_review = sub.add_parser(
         "sources-review",
@@ -888,6 +898,8 @@ def main(argv: Optional[list] = None) -> int:
                         include_content=args.include_content,
                         rights_confirmed=args.rights_confirmed,
                         max_content_chars=args.max_content_chars,
+                        articles_per_source=args.articles_per_source,
+                        include_descriptions=not args.omit_descriptions,
                     )
                 )
             elif args.command == "sources-review":

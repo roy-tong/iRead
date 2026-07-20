@@ -147,6 +147,7 @@ flowchart LR
 | 配置微信授权 | [微信授权说明](docs/wechat-authorization.md) |
 | 手工配置或使用 CLI | [高级定制](docs/customization.md) |
 | 了解 Agent 权限和审批边界 | [Agent 控制面](docs/agent-control-plane.md) |
+| 查看一套真实运行的 AI 与具身研究案例 | [AI 与具身研究标杆案例](examples/ai-embodied-research/README.md) |
 | 贡献代码、信源或订阅领域 | [贡献指南](CONTRIBUTING.md) |
 
 ## 开发与验证

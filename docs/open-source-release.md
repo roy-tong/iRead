@@ -26,6 +26,21 @@ The exporter enforces this distinction:
 bin/iread export --output-dir public/archive
 ```
 
+For a reviewable repository snapshot, use a bounded sample and omit
+publisher-provided descriptions:
+
+```bash
+bin/iread export \
+  --output-dir examples/my-research/snapshot \
+  --articles-per-source 2 \
+  --omit-descriptions
+```
+
+This mode keeps the newest records for each source and records the full local
+corpus count in `manifest.json`. Report records expose only the Markdown file
+name and delivery status; local absolute paths and Notion URLs are never written
+to the public archive.
+
 This writes:
 
 - `sources.json`: disclosed sources and feed URLs.
@@ -69,6 +84,9 @@ Use that only for sources you are allowed to republish.
 4. Review the generated archive before committing it. The default archive should
    not contain `content_text` or `content_html`.
 
+   For a tracked benchmark snapshot, also omit descriptions and check for local
+   paths, delivery URLs, credentials, and authorization files.
+
 5. Publish the repository with `LICENSE`, `NOTICE.md`, `CONTRIBUTING.md`, this
    guide, the iRead subscription issue form, and the source configuration files
    included.
@@ -87,3 +105,12 @@ reviewing the export and configuring narrowly scoped credentials.
 For RSS-only subscriptions, a scheduled GitHub Action can run `sync`, `enrich`, and
 `export` if the required model credentials and publisher terms allow it. Keep
 full-text export disabled unless publication rights are confirmed.
+
+## Local storage maintenance
+
+SQLite databases are not rotated automatically because they are the durable
+local corpus. Verbose collector logs are bounded separately: the macOS schedule
+runs `scripts/rotate_logs.sh` daily and compresses files larger than 64 MiB,
+keeping two archives by default. Override the thresholds with
+`IREAD_LOG_MAX_BYTES` and `IREAD_LOG_KEEP`, or preview work with
+`scripts/rotate_logs.sh --dry-run`.

@@ -1,0 +1,2281 @@
+{
+  "sources": [
+    {
+      "id": "AI_Whitepaper",
+      "name": "AI产品白皮书",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "aicpb-com",
+      "name": "AI产品榜",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "AINGmakers",
+      "name": "AING硬迹",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "AIshenduyanjiuyuan",
+      "name": "AI 深度研究员",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "AI深度研究员"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "baijingapp",
+      "name": "白鲸出海",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "elsewhere-news",
+      "name": "elsewhere别处发生",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "elsewhere 别处发生"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "afterhoursere",
+      "name": "饭後服用AfterHours",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "饭后服用AfterHours",
+        "AfterHours"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "uniqueresearch",
+      "name": "非凡产研",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "non-consensus",
+      "name": "非共识机器人",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "gyzcgl",
+      "name": "高毅资产管理",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "guijixinzang",
+      "name": "硅基心脏",
+      "priority": "watch",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.4,
+        "influence": 0.4,
+        "reliability": 0.55,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "sv_race",
+      "name": "硅兔赛跑",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "Si-Planet",
+      "name": "硅星人Pro",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "unicornobserver",
+      "name": "海外独角兽",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "back_propagation_zfe",
+      "name": "后向传播",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "huxiu_com",
+      "name": "虎嗅APP",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "虎嗅app",
+        "虎嗅"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "itjuzi521",
+      "name": "IT桔子",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "geekpark",
+      "name": "极客公园",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "matrixpartnerschina",
+      "name": "经纬创投",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "whalerhino",
+      "name": "鲸犀",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "jqcapital",
+      "name": "锦秋集",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "jqrkaifazhe001",
+      "name": "机器人开放社区",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "almosthuman2014",
+      "name": "机器之心",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "SmartFlowAI",
+      "name": "机智流",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "EmbodiedAI_4_Future",
+      "name": "具身智能之心",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "TechView2025",
+      "name": "科技暴论",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "itechwalker",
+      "name": "科技行者",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "liucongnotes",
+      "name": "刘聪NLP",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "liziran_com",
+      "name": "李自然说",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "paperweekly",
+      "name": "PaperWeekly",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "pencilnews",
+      "name": "铅笔道",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "gh_b2668ba79139",
+      "name": "Renee 创业随笔",
+      "priority": "watch",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "Renee创业随笔"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.4,
+        "influence": 0.4,
+        "reliability": 0.55,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "c-r-o-s-s-i-n-g",
+      "name": "十字路口Crossing",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "十字路口 Crossing"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "szqx1991",
+      "name": "数智前线",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "Rockhazix",
+      "name": "数字生命卡兹克",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "tanyeling-123",
+      "name": "谭叶玲成长记",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "gh_31c13c119bab",
+      "name": "天才程序员周弈帆",
+      "priority": "watch",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.4,
+        "influence": 0.4,
+        "reliability": 0.55,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "postlate",
+      "name": "晚点LatePost",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "晚点 LatePost"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "close_3882622889",
+      "name": "肖恩的部落格",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "techsina",
+      "name": "新浪科技",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "AI_era",
+      "name": "新智元",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "feibiaojixiesheji",
+      "name": "硬件产品笔记",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "south_36kr",
+      "name": "硬氪",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "FuneralAI",
+      "name": "葬AI",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "ZPotentials",
+      "name": "Z Potentials",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "ZPotentials"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "wow36kr",
+      "name": "36氪",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "QbitAI",
+      "name": "量子位",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "zhidxcom",
+      "name": "智东西",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "jazzyear",
+      "name": "甲子光年",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "pedaily2012",
+      "name": "投资界",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "gaogongrobot",
+      "name": "高工机器人",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "RoboSpeak",
+      "name": "机器人大讲堂",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "Founder-Park",
+      "name": "Founder Park",
+      "priority": "required",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "aitechtalk",
+      "name": "AI科技评论",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "aichip001",
+      "name": "芯东西",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "eet-china",
+      "name": "电子工程专辑",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "AGV-AMR",
+      "name": "移动机器人产业联盟",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "新战略机器人",
+        "新战略机器人全媒体"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "BAAIHub",
+      "name": "智源社区",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "CAICT_CHINA",
+      "name": "中国信通院CAICT",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "中国信通院"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "op7418ux",
+      "name": "歸藏的AI工具箱",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "归藏的AI工具箱"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "baoyu-ai-",
+      "name": "宝玉AI",
+      "priority": "preferred",
+      "source_type": "wechat",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "宝玉"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "languageisworld",
+      "name": "语言即世界language is world",
+      "priority": "required",
+      "source_type": "interview",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "语言即世界",
+        "张小珺Jùn",
+        "张小珺"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.78,
+        "reliability": 0.74,
+        "originality": 0.96,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "BinaryBodhi",
+      "name": "赛博禅心",
+      "priority": "preferred",
+      "source_type": "independent_analysis",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.58,
+        "reliability": 0.62,
+        "originality": 0.82,
+        "clickbait_risk": 0.2
+      }
+    },
+    {
+      "id": "xixiaoyaoQAQ",
+      "name": "夕小瑶科技说",
+      "priority": "preferred",
+      "source_type": "technical_analysis",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.64,
+        "reliability": 0.72,
+        "originality": 0.78,
+        "clickbait_risk": 0.14
+      }
+    },
+    {
+      "id": "luanbooks",
+      "name": "乱翻书",
+      "priority": "required",
+      "source_type": "interview",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.72,
+        "reliability": 0.68,
+        "originality": 0.9,
+        "clickbait_risk": 0.12
+      }
+    },
+    {
+      "id": "waves36kr",
+      "name": "暗涌Waves",
+      "priority": "required",
+      "source_type": "original_reporting",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "暗涌 Waves"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.74,
+        "reliability": 0.74,
+        "originality": 0.88,
+        "clickbait_risk": 0.14
+      }
+    },
+    {
+      "id": "myfortytwo",
+      "name": "42章经",
+      "priority": "preferred",
+      "source_type": "investor_analysis",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.7,
+        "reliability": 0.64,
+        "originality": 0.84,
+        "clickbait_risk": 0.18
+      }
+    },
+    {
+      "id": "TheValley101",
+      "name": "硅谷101",
+      "priority": "required",
+      "source_type": "interview",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.76,
+        "reliability": 0.74,
+        "originality": 0.92,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "gh_388882297",
+      "name": "晚点对话",
+      "priority": "required",
+      "source_type": "interview",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.8,
+        "reliability": 0.78,
+        "originality": 0.94,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "gh_3198736570",
+      "name": "OnBoard Podcast",
+      "priority": "required",
+      "source_type": "interview",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "OnBoard"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.66,
+        "reliability": 0.7,
+        "originality": 0.92,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "gh_3932900742",
+      "name": "屠龙之术",
+      "priority": "preferred",
+      "source_type": "investor_analysis",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.58,
+        "reliability": 0.62,
+        "originality": 0.86,
+        "clickbait_risk": 0.16
+      }
+    },
+    {
+      "id": "Lynndacapo",
+      "name": "捕蛇者說",
+      "priority": "preferred",
+      "source_type": "practitioner_interview",
+      "capture_method": "wechat",
+      "content_mode": "full_text",
+      "homepage_url": null,
+      "feed_url": null,
+      "aliases": [
+        "捕蛇者说"
+      ],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.56,
+        "reliability": 0.68,
+        "originality": 0.88,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "external:mit-technology-review",
+      "name": "MIT Technology Review",
+      "priority": "required",
+      "source_type": "international_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.technologyreview.com/topic/artificial-intelligence/",
+      "feed_url": "https://www.technologyreview.com/feed/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.85,
+        "reliability": 0.78,
+        "originality": 0.78,
+        "clickbait_risk": 0.12
+      }
+    },
+    {
+      "id": "external:ieee-spectrum-robotics",
+      "name": "IEEE Spectrum Robotics",
+      "priority": "required",
+      "source_type": "international_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://spectrum.ieee.org/topic/robotics/",
+      "feed_url": "https://spectrum.ieee.org/feeds/topic/robotics.rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.82,
+        "reliability": 0.84,
+        "originality": 0.8,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "external:techcrunch-ai",
+      "name": "TechCrunch AI",
+      "priority": "required",
+      "source_type": "international_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://techcrunch.com/category/artificial-intelligence/",
+      "feed_url": "https://techcrunch.com/category/artificial-intelligence/feed/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.86,
+        "reliability": 0.68,
+        "originality": 0.7,
+        "clickbait_risk": 0.28
+      }
+    },
+    {
+      "id": "external:crunchbase-news",
+      "name": "Crunchbase News",
+      "priority": "required",
+      "source_type": "funding_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://news.crunchbase.com/",
+      "feed_url": "https://news.crunchbase.com/feed/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.78,
+        "reliability": 0.76,
+        "originality": 0.72,
+        "clickbait_risk": 0.16
+      }
+    },
+    {
+      "id": "external:venturebeat-ai",
+      "name": "VentureBeat AI",
+      "priority": "preferred",
+      "source_type": "international_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://venturebeat.com/category/ai/",
+      "feed_url": "https://venturebeat.com/category/ai/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.72,
+        "reliability": 0.64,
+        "originality": 0.66,
+        "clickbait_risk": 0.3
+      }
+    },
+    {
+      "id": "external:sifted",
+      "name": "Sifted",
+      "priority": "preferred",
+      "source_type": "funding_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://sifted.eu/",
+      "feed_url": "https://sifted.eu/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.68,
+        "reliability": 0.72,
+        "originality": 0.74,
+        "clickbait_risk": 0.18
+      }
+    },
+    {
+      "id": "external:ars-technica-ai",
+      "name": "Ars Technica AI",
+      "priority": "preferred",
+      "source_type": "international_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://arstechnica.com/ai/",
+      "feed_url": "https://feeds.arstechnica.com/arstechnica/technology-lab",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.76,
+        "reliability": 0.78,
+        "originality": 0.74,
+        "clickbait_risk": 0.18
+      }
+    },
+    {
+      "id": "external:wired-ai",
+      "name": "WIRED AI",
+      "priority": "preferred",
+      "source_type": "international_media",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.wired.com/tag/artificial-intelligence/",
+      "feed_url": "https://www.wired.com/feed/tag/ai/latest/rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.8,
+        "reliability": 0.7,
+        "originality": 0.76,
+        "clickbait_risk": 0.24
+      }
+    },
+    {
+      "id": "external:openai-news",
+      "name": "OpenAI News",
+      "priority": "required",
+      "source_type": "first_party",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://openai.com/news/",
+      "feed_url": "https://openai.com/news/rss.xml",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.95,
+        "reliability": 0.82,
+        "originality": 0.95,
+        "clickbait_risk": 0.12
+      }
+    },
+    {
+      "id": "external:google-deepmind",
+      "name": "Google DeepMind Blog",
+      "priority": "required",
+      "source_type": "first_party",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://deepmind.google/discover/blog/",
+      "feed_url": "https://deepmind.google/blog/rss.xml",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.94,
+        "reliability": 0.84,
+        "originality": 0.95,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "external:hugging-face-blog",
+      "name": "Hugging Face Blog",
+      "priority": "required",
+      "source_type": "first_party",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://huggingface.co/blog",
+      "feed_url": "https://huggingface.co/blog/feed.xml",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.86,
+        "reliability": 0.78,
+        "originality": 0.9,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "external:reuters-ai",
+      "name": "Reuters Technology / AI",
+      "priority": "required",
+      "source_type": "international_media",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.reuters.com/technology/artificial-intelligence/",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:the-robot-report",
+      "name": "The Robot Report",
+      "priority": "required",
+      "source_type": "international_media",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.therobotreport.com/",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:rest-of-world",
+      "name": "Rest of World",
+      "priority": "required",
+      "source_type": "international_media",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://restofworld.org/",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:semafor-technology",
+      "name": "Semafor Technology",
+      "priority": "preferred",
+      "source_type": "international_media",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.semafor.com/technology",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:anthropic-news",
+      "name": "Anthropic News",
+      "priority": "required",
+      "source_type": "first_party",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.anthropic.com/news",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:nvidia-blog",
+      "name": "NVIDIA Blog",
+      "priority": "required",
+      "source_type": "first_party",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://blogs.nvidia.com/",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.75,
+        "reliability": 0.65,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:meta-ai-blog",
+      "name": "Meta AI Blog",
+      "priority": "preferred",
+      "source_type": "first_party",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://ai.meta.com/blog/",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:robotics-company-pool",
+      "name": "Robotics Company Official Pool",
+      "priority": "preferred",
+      "source_type": "first_party_pool",
+      "capture_method": "web_pending",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.figure.ai/news",
+      "feed_url": null,
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.55,
+        "reliability": 0.6,
+        "originality": 0.5,
+        "clickbait_risk": 0.25
+      }
+    },
+    {
+      "id": "external:simon-willison",
+      "name": "Simon Willison",
+      "priority": "preferred",
+      "source_type": "independent_practitioner",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://simonwillison.net/",
+      "feed_url": "https://simonwillison.net/atom/entries/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.78,
+        "reliability": 0.82,
+        "originality": 0.94,
+        "clickbait_risk": 0.06
+      }
+    },
+    {
+      "id": "external:latent-space",
+      "name": "Latent Space",
+      "priority": "required",
+      "source_type": "interview_and_engineering",
+      "capture_method": "rss",
+      "content_mode": "full_text_or_episode_notes",
+      "homepage_url": "https://www.latent.space/",
+      "feed_url": "https://www.latent.space/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.78,
+        "reliability": 0.74,
+        "originality": 0.9,
+        "clickbait_risk": 0.12
+      }
+    },
+    {
+      "id": "external:ahead-of-ai",
+      "name": "Ahead of AI / Sebastian Raschka",
+      "priority": "preferred",
+      "source_type": "technical_analysis",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://magazine.sebastianraschka.com/",
+      "feed_url": "https://magazine.sebastianraschka.com/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.7,
+        "reliability": 0.86,
+        "originality": 0.9,
+        "clickbait_risk": 0.05
+      }
+    },
+    {
+      "id": "external:chip-huyen",
+      "name": "Chip Huyen",
+      "priority": "preferred",
+      "source_type": "independent_practitioner",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://huyenchip.com/blog/",
+      "feed_url": "https://huyenchip.com/feed.xml",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.76,
+        "reliability": 0.84,
+        "originality": 0.94,
+        "clickbait_risk": 0.05
+      }
+    },
+    {
+      "id": "external:eugene-yan",
+      "name": "Eugene Yan",
+      "priority": "preferred",
+      "source_type": "independent_practitioner",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://eugeneyan.com/",
+      "feed_url": "https://eugeneyan.com/rss/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.68,
+        "reliability": 0.84,
+        "originality": 0.92,
+        "clickbait_risk": 0.04
+      }
+    },
+    {
+      "id": "external:bens-bites",
+      "name": "Ben's Bites",
+      "priority": "preferred",
+      "source_type": "product_practitioner",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.bensbites.com/",
+      "feed_url": "https://www.bensbites.com/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "作者有创业与投资业务，涉及相关项目时不视为独立验证。",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.67,
+        "reliability": 0.62,
+        "originality": 0.76,
+        "clickbait_risk": 0.26
+      }
+    },
+    {
+      "id": "external:interconnects",
+      "name": "Interconnects / Nathan Lambert",
+      "priority": "required",
+      "source_type": "researcher_analysis",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.interconnects.ai/",
+      "feed_url": "https://www.interconnects.ai/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.8,
+        "reliability": 0.82,
+        "originality": 0.92,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "external:semianalysis",
+      "name": "SemiAnalysis",
+      "priority": "required",
+      "source_type": "industry_research",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://newsletter.semianalysis.com/",
+      "feed_url": "https://newsletter.semianalysis.com/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "付费研究与咨询业务可能涉及被分析公司，利益关系按文章披露单独标注。",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.88,
+        "reliability": 0.78,
+        "originality": 0.9,
+        "clickbait_risk": 0.14
+      }
+    },
+    {
+      "id": "external:import-ai",
+      "name": "Import AI / Jack Clark",
+      "priority": "preferred",
+      "source_type": "research_and_policy_analysis",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://jack-clark.net/",
+      "feed_url": "https://jack-clark.net/feed/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "作者是 Anthropic 联合创始人，涉及 Anthropic 时不视为独立来源。",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.82,
+        "reliability": 0.8,
+        "originality": 0.88,
+        "clickbait_risk": 0.06
+      }
+    },
+    {
+      "id": "external:no-priors",
+      "name": "No Priors",
+      "priority": "required",
+      "source_type": "interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes",
+      "homepage_url": "https://www.nopriorspodcast.com/",
+      "feed_url": "https://feeds.megaphone.fm/nopriors",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "主持人为风险投资人，涉及投资组合时降低独立性权重。",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.8,
+        "reliability": 0.7,
+        "originality": 0.94,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "external:dwarkesh-podcast",
+      "name": "Dwarkesh Podcast",
+      "priority": "required",
+      "source_type": "interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes_or_page_transcript",
+      "homepage_url": "https://www.dwarkesh.com/",
+      "feed_url": "https://apple.dwarkesh-podcast.workers.dev/feed.rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.84,
+        "reliability": 0.72,
+        "originality": 0.96,
+        "clickbait_risk": 0.07
+      }
+    },
+    {
+      "id": "external:one-useful-thing",
+      "name": "One Useful Thing / Ethan Mollick",
+      "priority": "required",
+      "source_type": "researcher_practitioner",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.oneusefulthing.org/",
+      "feed_url": "https://www.oneusefulthing.org/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.82,
+        "reliability": 0.8,
+        "originality": 0.88,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "external:normal-technology",
+      "name": "AI as Normal Technology",
+      "priority": "preferred",
+      "source_type": "researcher_analysis",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://www.normaltech.ai/",
+      "feed_url": "https://www.normaltech.ai/feed",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.76,
+        "reliability": 0.84,
+        "originality": 0.88,
+        "clickbait_risk": 0.05
+      }
+    },
+    {
+      "id": "external:rodney-brooks",
+      "name": "Rodney Brooks Essays",
+      "priority": "preferred",
+      "source_type": "independent_practitioner",
+      "capture_method": "rss",
+      "content_mode": "full_text",
+      "homepage_url": "https://rodneybrooks.com/category/essays/",
+      "feed_url": "https://rodneybrooks.com/feed/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.8,
+        "reliability": 0.82,
+        "originality": 0.92,
+        "clickbait_risk": 0.04
+      }
+    },
+    {
+      "id": "external:cognitive-revolution",
+      "name": "The Cognitive Revolution",
+      "priority": "required",
+      "source_type": "interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes_or_page_transcript",
+      "homepage_url": "https://www.cognitiverevolution.ai/",
+      "feed_url": "https://feeds.megaphone.fm/RINTP3108857801",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "主持人具有投资人身份，相关公司内容按披露标注利益关系。",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.76,
+        "reliability": 0.7,
+        "originality": 0.92,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "external:chinatalk",
+      "name": "ChinaTalk",
+      "priority": "required",
+      "source_type": "interview_and_analysis",
+      "capture_method": "rss",
+      "content_mode": "episode_notes_or_transcript_link",
+      "homepage_url": "https://www.chinatalk.media/",
+      "feed_url": "https://feeds.megaphone.fm/CHTAL4990341033",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 1.0,
+        "influence": 0.74,
+        "reliability": 0.76,
+        "originality": 0.92,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "external:gradient-podcast",
+      "name": "The Gradient Podcast",
+      "priority": "preferred",
+      "source_type": "research_interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes",
+      "homepage_url": "https://thegradient.pub/",
+      "feed_url": "https://anchor.fm/s/1f7d47e4/podcast/rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.68,
+        "reliability": 0.78,
+        "originality": 0.9,
+        "clickbait_risk": 0.05
+      }
+    },
+    {
+      "id": "external:mlst",
+      "name": "Machine Learning Street Talk",
+      "priority": "preferred",
+      "source_type": "technical_interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes_or_transcript_link",
+      "homepage_url": "https://www.mlst.ai/",
+      "feed_url": "https://anchor.fm/s/1e4a0eac/podcast/rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.7,
+        "reliability": 0.72,
+        "originality": 0.94,
+        "clickbait_risk": 0.08
+      }
+    },
+    {
+      "id": "external:how-i-ai",
+      "name": "How I AI",
+      "priority": "preferred",
+      "source_type": "practitioner_interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes",
+      "homepage_url": "https://www.youtube.com/@howiaipodcast",
+      "feed_url": "https://anchor.fm/s/1035b1568/podcast/rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.62,
+        "reliability": 0.68,
+        "originality": 0.9,
+        "clickbait_risk": 0.1
+      }
+    },
+    {
+      "id": "external:lex-fridman",
+      "name": "Lex Fridman Podcast",
+      "priority": "preferred",
+      "source_type": "interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes_or_transcript_link",
+      "homepage_url": "https://lexfridman.com/podcast/",
+      "feed_url": "https://lexfridman.com/feed/podcast/",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.9,
+        "reliability": 0.62,
+        "originality": 0.92,
+        "clickbait_risk": 0.12
+      }
+    },
+    {
+      "id": "external:lennys-podcast",
+      "name": "Lenny's Podcast",
+      "priority": "preferred",
+      "source_type": "product_interview_podcast",
+      "capture_method": "rss",
+      "content_mode": "episode_notes_or_transcript_link",
+      "homepage_url": "https://www.lennyspodcast.com/",
+      "feed_url": "https://api.substack.com/feed/podcast/10845.rss",
+      "aliases": [],
+      "profile_status": "provisional",
+      "conflict_note": "主持人有投资与商业合作，涉及相关公司时按文章披露标注。",
+      "scores": {
+        "weight": 0.7,
+        "influence": 0.82,
+        "reliability": 0.7,
+        "originality": 0.9,
+        "clickbait_risk": 0.1
+      }
+    }
+  ]
+}

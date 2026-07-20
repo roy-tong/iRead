@@ -1,0 +1,15 @@
+{
+  "reports": [
+    {
+      "id": 1,
+      "kind": "daily",
+      "period_start": "2026-07-15T10:00:00+00:00",
+      "period_end": "2026-07-16T10:00:00+00:00",
+      "title": "AI与具身情报日报 - 2026-07-16",
+      "markdown_file": "2026-07-16-daily.md",
+      "model": "gpt-5.6-terra",
+      "created_at": "2026-07-16T13:35:06+00:00",
+      "delivery_status": "complete"
+    }
+  ]
+}

@@ -54,6 +54,7 @@ def _article_record(
     row: Mapping[str, Any],
     include_content: bool,
     max_content_chars: Optional[int],
+    include_descriptions: bool,
 ) -> Dict[str, Any]:
     record: Dict[str, Any] = {
         "id": row["id"],
@@ -64,7 +65,6 @@ def _article_record(
         "title": row["title"],
         "url": row["url"],
         "published_at": _iso_timestamp(row["published_at"]),
-        "description": row["description"],
         "transcript_url": row["transcript_url"],
         "transcript_status": row["transcript_status"],
         "primary_topic": row["primary_topic"],
@@ -94,6 +94,8 @@ def _article_record(
         "ingested_at": _iso_timestamp(row["ingested_at"]),
         "updated_at": _iso_timestamp(row["updated_at"]),
     }
+    if include_descriptions:
+        record["description"] = row["description"]
     if include_content:
         content_text = row["content_text"] or ""
         content_html = row["content_html"] or ""
@@ -112,12 +114,16 @@ def export_public_archive(
     include_content: bool = False,
     rights_confirmed: bool = False,
     max_content_chars: Optional[int] = None,
+    articles_per_source: Optional[int] = None,
+    include_descriptions: bool = True,
 ) -> Dict[str, Any]:
     if include_content and not rights_confirmed:
         raise RuntimeError(
             "Full-text export requires --rights-confirmed. "
             "Only use it for sources where you have permission or a compatible license."
         )
+    if articles_per_source is not None and articles_per_source < 1:
+        raise ValueError("articles_per_source must be at least 1")
 
     output_dir = settings.resolve_path(str(output_dir))
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -134,16 +140,27 @@ def export_public_archive(
     )
 
     article_count = 0
+    source_article_counts: Dict[str, int] = {}
     with articles_path.open("w", encoding="utf-8") as handle:
         for row in db.rows("SELECT * FROM articles ORDER BY published_at DESC, id"):
+            source_id = str(row["source_wechat_id"])
+            source_count = source_article_counts.get(source_id, 0)
+            if articles_per_source is not None and source_count >= articles_per_source:
+                continue
             handle.write(
                 json.dumps(
-                    _article_record(row, include_content, max_content_chars),
+                    _article_record(
+                        row,
+                        include_content,
+                        max_content_chars,
+                        include_descriptions,
+                    ),
                     ensure_ascii=False,
                     sort_keys=True,
                 )
                 + "\n"
             )
+            source_article_counts[source_id] = source_count + 1
             article_count += 1
 
     report_rows = db.rows(
@@ -160,11 +177,10 @@ def export_public_archive(
             "period_start": _iso_timestamp(row["period_start"]),
             "period_end": _iso_timestamp(row["period_end"]),
             "title": row["title"],
-            "markdown_path": row["markdown_path"],
+            "markdown_file": Path(str(row["markdown_path"])).name,
             "model": row["model"],
             "created_at": _iso_timestamp(row["created_at"]),
-            "notion_url": row["notion_url"],
-            "notion_status": row["notion_status"],
+            "delivery_status": row["notion_status"],
         }
         for row in report_rows
     ]
@@ -173,12 +189,42 @@ def export_public_archive(
         encoding="utf-8",
     )
 
+    corpus_row = db.rows(
+        """
+        SELECT COUNT(*) AS article_count,
+               MIN(published_at) AS oldest_published_at,
+               MAX(published_at) AS newest_published_at
+        FROM articles
+        """
+    )[0]
+    analysis_status_counts = {
+        str(row["analysis_status"]): int(row["article_count"])
+        for row in db.rows(
+            """
+            SELECT analysis_status, COUNT(*) AS article_count
+            FROM articles GROUP BY analysis_status ORDER BY analysis_status
+            """
+        )
+    }
+
     manifest = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "article_count": article_count,
         "source_count": len(sources),
         "report_count": len(reports),
         "includes_full_text": include_content,
+        "includes_descriptions": include_descriptions,
+        "sampling": {
+            "strategy": "latest_per_source" if articles_per_source is not None else "all",
+            "articles_per_source": articles_per_source,
+            "sources_with_articles": len(source_article_counts),
+        },
+        "corpus": {
+            "available_articles": int(corpus_row["article_count"]),
+            "oldest_published_at": _iso_timestamp(corpus_row["oldest_published_at"]),
+            "newest_published_at": _iso_timestamp(corpus_row["newest_published_at"]),
+            "analysis_status_counts": analysis_status_counts,
+        },
         "rights_confirmation": FULLTEXT_EXPORT_CONFIRMATION if include_content else None,
         "content_policy": (
             "Code is MIT licensed. Article copyrights remain with their original publishers. "
@@ -201,5 +247,8 @@ def export_public_archive(
         "articles": article_count,
         "reports": len(reports),
         "includes_full_text": include_content,
+        "includes_descriptions": include_descriptions,
+        "articles_per_source": articles_per_source,
+        "available_articles": int(corpus_row["article_count"]),
         "files": [sources_path.name, articles_path.name, reports_path.name, manifest_path.name],
     }

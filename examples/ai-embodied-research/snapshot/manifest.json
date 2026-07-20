@@ -1,0 +1,30 @@
+{
+  "generated_at": "2026-07-20T02:02:37.352146+00:00",
+  "article_count": 196,
+  "source_count": 112,
+  "report_count": 1,
+  "includes_full_text": false,
+  "includes_descriptions": false,
+  "sampling": {
+    "strategy": "latest_per_source",
+    "articles_per_source": 2,
+    "sources_with_articles": 99
+  },
+  "corpus": {
+    "available_articles": 23620,
+    "oldest_published_at": "2025-12-31T19:48:47+00:00",
+    "newest_published_at": "2026-07-19T14:17:48+00:00",
+    "analysis_status_counts": {
+      "done": 169,
+      "pending": 23411,
+      "retry": 40
+    }
+  },
+  "rights_confirmation": null,
+  "content_policy": "Code is MIT licensed. Article copyrights remain with their original publishers. The default archive exports metadata, links, and generated analysis, not full article text.",
+  "files": {
+    "sources": "sources.json",
+    "articles": "articles.jsonl",
+    "reports": "reports.json"
+  }
+}

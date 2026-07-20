@@ -130,6 +130,7 @@ The code is available under the [MIT License](LICENSE). See [NOTICE.md](NOTICE.m
 - [WeChat authorization](docs/wechat-authorization.md)
 - [Advanced customization](docs/customization.md)
 - [Agent permissions and approval boundaries](docs/agent-control-plane.md)
+- [AI and embodied-intelligence reference deployment](examples/ai-embodied-research/README.md)
 
 ## Development
 
