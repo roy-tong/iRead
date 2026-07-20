@@ -12,6 +12,7 @@ from .proposals import (
     _normalize_proposal,
     _slug,
     apply_research_proposal,
+    validate_research_proposal,
 )
 from .settings import Settings, normalize_name
 from .text import normalize_url
@@ -422,6 +423,7 @@ def apply_research_subscription(
             raise ValueError(
                 f"Proposal batch id {proposal_batch_id!r} does not match {item['id']!r}"
             )
+        validate_research_proposal(proposal, strict=True)
         domain_proposals.append((item, proposal))
         proposal_paths.append(str(proposal_path))
 

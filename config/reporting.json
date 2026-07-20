@@ -79,11 +79,14 @@
   },
   "analysis": {
     "batch_size": 10,
-    "max_article_chars": 14000,
-    "max_transcript_chars": 36000,
+    "max_article_chars": 8000,
+    "max_transcript_chars": 24000,
     "max_summary_chars": 900,
     "model": "gpt-5.6-terra",
     "reasoning_effort": "high",
+    "enrichment_reasoning_effort": "medium",
+    "report_reasoning_effort": "high",
+    "proposal_reasoning_effort": "high",
     "timeout_seconds": 1800
   },
   "collection": {
@@ -104,6 +107,8 @@
     "rss_page_size": 100,
     "request_timeout_seconds": 45,
     "external_request_timeout_seconds": 35,
+    "external_fetch_workers": 6,
+    "external_fetch_retries": 1,
     "stale_required_days": 14,
     "stale_other_days": 30,
     "initial_backfill_pages": 80,

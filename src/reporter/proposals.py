@@ -16,6 +16,30 @@ from .analysis import run_codex_json
 from .settings import Settings
 
 
+SOURCE_ROLES = {
+    "primary_source",
+    "expert_voice",
+    "independent_reporting",
+    "specialist_analysis",
+    "discovery_signal",
+}
+SOURCE_ROLE_LABELS = {
+    "primary_source": "一手来源",
+    "expert_voice": "专家/从业者",
+    "independent_reporting": "独立报道",
+    "specialist_analysis": "专业分析",
+    "discovery_signal": "发现线索",
+}
+STRICT_ROLE_MINIMUMS = {
+    "primary_source": 2,
+    "expert_voice": 1,
+    "independent_reporting": 2,
+    "specialist_analysis": 1,
+    "discovery_signal": 1,
+}
+AUTOMATIC_CAPTURE_METHODS = {"rss", "wechat"}
+
+
 def _values(values: Optional[Iterable[str]], fallback: List[str]) -> List[str]:
     result = [str(value).strip() for value in (values or []) if str(value).strip()]
     return result or fallback
@@ -130,14 +154,10 @@ def validate_research_proposal(
         errors.append(f"sources must contain at least {minimum_sources} item(s)")
         sources = [] if not isinstance(sources, list) else sources
 
-    allowed_roles = {
-        "primary_source",
-        "expert_voice",
-        "independent_reporting",
-        "specialist_analysis",
-        "discovery_signal",
-    }
     observed_roles = set()
+    role_counts = {role: 0 for role in SOURCE_ROLES}
+    automatic_capture_count = 0
+    representative_work_urls = set()
     for index, source in enumerate(sources):
         prefix = f"sources[{index}]"
         if not isinstance(source, Mapping):
@@ -147,10 +167,13 @@ def validate_research_proposal(
             if not str(source.get(key) or "").strip():
                 errors.append(f"{prefix}.{key} must not be empty")
         role = str(source.get("role") or "")
-        if role not in allowed_roles:
+        if role not in SOURCE_ROLES:
             errors.append(f"{prefix}.role is invalid: {role or '<empty>'}")
         else:
             observed_roles.add(role)
+            role_counts[role] += 1
+        if source.get("capture_method") in AUTOMATIC_CAPTURE_METHODS:
+            automatic_capture_count += 1
         locators = [
             str(source.get("homepage_url") or ""),
             str(source.get("feed_url") or ""),
@@ -178,13 +201,37 @@ def validate_research_proposal(
                 errors.append(
                     f"{prefix}.representative_works[{work_index}] needs a title and HTTP(S) URL"
                 )
+            elif strict and work_url in representative_work_urls:
+                errors.append(
+                    f"{prefix}.representative_works[{work_index}] duplicates another work URL"
+                )
+            else:
+                representative_work_urls.add(work_url)
+        evidence_urls = source.get("discovery_evidence_urls", [])
+        if strict and (
+            not isinstance(evidence_urls, list)
+            or not any(_is_web_url(str(url)) for url in evidence_urls)
+        ):
+            errors.append(f"{prefix}.discovery_evidence_urls needs a verified HTTP(S) URL")
 
     if strict:
-        missing_roles = sorted(allowed_roles - observed_roles)
+        missing_roles = sorted(SOURCE_ROLES - observed_roles)
         if missing_roles:
             errors.append(
                 "sources must cover every source role; missing: "
                 + ", ".join(missing_roles)
+            )
+        for role, minimum in STRICT_ROLE_MINIMUMS.items():
+            if role_counts[role] < minimum:
+                errors.append(
+                    f"sources needs at least {minimum} {role} source(s); found {role_counts[role]}"
+                )
+        minimum_captureable = max(3, int(len(sources) * 0.35 + 0.999))
+        if automatic_capture_count < minimum_captureable:
+            errors.append(
+                "sources needs at least "
+                f"{minimum_captureable} automatically captureable rss/wechat source(s); "
+                f"found {automatic_capture_count}"
             )
 
     presets = proposal.get("report_presets", [])
@@ -216,8 +263,86 @@ def validate_research_proposal(
         "topics": len(topics),
         "sources": len(sources),
         "source_roles": sorted(observed_roles),
+        "role_counts": role_counts,
+        "automatic_capture_sources": automatic_capture_count,
+        "automatic_capture_ratio": round(
+            automatic_capture_count / len(sources), 3
+        ) if sources else 0.0,
         "report_presets": sorted(preset_ids),
     }
+
+
+def proposal_review_markdown(proposal: Mapping[str, Any]) -> str:
+    """Render a complete, compact review artifact for non-technical approval."""
+    validation = validate_research_proposal(proposal, strict=True)
+    profile = proposal["research_profile"]
+    strategy = proposal.get("source_strategy", {})
+    lines = [
+        f"# {profile['name']} 信源审核稿",
+        "",
+        str(profile.get("description") or "").strip(),
+        "",
+        "## 覆盖概览",
+        "",
+        f"- 主题：{validation['topics']} 个",
+        f"- 候选信源：{validation['sources']} 个",
+        (
+            f"- 可自动采集：{validation['automatic_capture_sources']} 个"
+            f"（{validation['automatic_capture_ratio']:.0%}）"
+        ),
+        "- 角色：" + "；".join(
+            f"{SOURCE_ROLE_LABELS[role]} {validation['role_counts'][role]}"
+            for role in SOURCE_ROLE_LABELS
+        ),
+    ]
+    known_gaps = [str(item) for item in strategy.get("known_gaps", []) if item]
+    if known_gaps:
+        lines.extend(["- 已知缺口：" + "；".join(known_gaps)])
+    lines.extend(["", "## 完整信源清单", ""])
+    for index, source in enumerate(proposal.get("sources", []), 1):
+        scores = source.get("preliminary_scores", {})
+        composite = round(
+            0.35 * float(scores.get("domain_fit", 50))
+            + 0.25 * float(scores.get("authority", 50))
+            + 0.15 * float(scores.get("originality", 50))
+            + 0.15 * float(scores.get("evidence_discipline", 50))
+            + 0.10 * float(scores.get("captureability", 50))
+        )
+        homepage = str(source.get("homepage_url") or "")
+        title = f"[{source['name']}]({homepage})" if homepage else str(source["name"])
+        lines.extend(
+            [
+                f"### {index}. {title}",
+                "",
+                (
+                    f"- 角色：{SOURCE_ROLE_LABELS.get(str(source.get('role')), source.get('role'))}"
+                    f"；采集：`{source.get('capture_method')}`；冷启动分：{composite}/100"
+                ),
+                f"- 推荐理由：{source.get('recommendation_reason') or '未填写'}",
+            ]
+        )
+        if source.get("conflict_note"):
+            lines.append(f"- 立场/利益关系：{source['conflict_note']}")
+        warnings = [str(item) for item in source.get("warnings", []) if item]
+        if warnings:
+            lines.append("- 风险：" + "；".join(warnings))
+        lines.append("- 代表作：")
+        for work in source.get("representative_works", []):
+            lines.append(
+                f"  - [{work['title']}]({work['url']})"
+                + (f"：{work['why_representative']}" if work.get("why_representative") else "")
+            )
+        lines.append("")
+    lines.extend(
+        [
+            "## 如何确认",
+            "",
+            "回到 Agent 中直接说：`批准该领域，使用标准报告，开始采集`。",
+            "也可以说：`删除 <信源名>，其余批准，先不开始采集`。",
+            "",
+        ]
+    )
+    return "\n".join(lines)
 
 
 def propose_research_setup(
@@ -252,6 +377,7 @@ def propose_research_setup(
         web_search=True,
     )
     normalized = _normalize_proposal(response, max_sources)
+    validate_research_proposal(normalized, strict=True)
     generated_at = datetime.now(ZoneInfo(settings.reporting.get("timezone", "Asia/Shanghai")))
     return {
         "proposal_version": 1,
@@ -572,6 +698,7 @@ def apply_research_batch(
     approved: Optional[Iterable[str]] = None,
     approve_all: bool = False,
     force: bool = False,
+    strict: bool = False,
 ) -> Dict[str, Any]:
     proposals_dir = proposals_dir.resolve()
     profiles_dir = profiles_dir.resolve()
@@ -613,6 +740,8 @@ def apply_research_batch(
                 raise ValueError(
                     f"Proposal batch id {proposal_batch_id!r} does not match {item['id']!r}"
                 )
+            if strict:
+                validate_research_proposal(proposal, strict=True)
             proposal["research_profile"] = dict(proposal["research_profile"])
             proposal["research_profile"]["id"] = item["id"]
             applied = apply_research_proposal(

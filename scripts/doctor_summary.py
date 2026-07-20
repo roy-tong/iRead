@@ -12,6 +12,15 @@ def main() -> int:
         warnings = summary.get("warnings", 0)
         warning_label = "warning" if warnings == 1 else "warnings"
         print(f"iRead check passed: {passed} passed, {warnings} {warning_label}.")
+        warning_checks = [
+            check for check in result.get("checks", []) if check.get("status") == "warn"
+        ]
+        if warning_checks:
+            details = "; ".join(
+                f"{check.get('name')}: {check.get('detail')}"
+                for check in warning_checks[:2]
+            )
+            print(f"Optional setup: {details}")
         return 0
 
     print("iRead check failed:", file=sys.stderr)

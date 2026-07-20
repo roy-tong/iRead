@@ -1,0 +1,57 @@
+#!/bin/bash
+set -euo pipefail
+
+SURFACE="${1:-}"
+INSTALL_ROOT="${IREAD_INSTALL_ROOT:-${XDG_DATA_HOME:-$HOME/.local/share}/iread}"
+ARCHIVE_URL="${IREAD_ARCHIVE_URL:-https://codeload.github.com/roy-tong/iRead/tar.gz/refs/heads/main}"
+
+case "$SURFACE" in
+  codex|claude-code|doubao|workbuddy) ;;
+  *)
+    printf 'Usage: curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- <codex|claude-code|doubao|workbuddy>\n' >&2
+    exit 2
+    ;;
+esac
+
+command -v python3 >/dev/null 2>&1 || {
+  printf 'Python 3.9 or newer is required to install iRead.\n' >&2
+  exit 2
+}
+
+if [[ -d "$INSTALL_ROOT/.git" ]]; then
+  command -v git >/dev/null 2>&1 || {
+    printf 'Git is required to update the existing iRead checkout.\n' >&2
+    exit 2
+  }
+  git -C "$INSTALL_ROOT" pull --ff-only --quiet
+elif [[ -f "$INSTALL_ROOT/.iread-archive-install" ]]; then
+  STAGE="$(mktemp -d "${TMPDIR:-/tmp}/iread-install.XXXXXX")"
+  trap 'rm -rf "$STAGE"' EXIT
+  curl -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 1 \
+    -o "$STAGE/iread.tar.gz" "$ARCHIVE_URL"
+  tar -xzf "$STAGE/iread.tar.gz" -C "$STAGE"
+  SOURCE_DIR="$(find "$STAGE" -mindepth 1 -maxdepth 1 -type d -name 'iRead-*' | head -n 1)"
+  [[ -n "$SOURCE_DIR" ]] || { printf 'Downloaded iRead archive is invalid.\n' >&2; exit 2; }
+  cp -R "$SOURCE_DIR/." "$INSTALL_ROOT/"
+elif [[ -e "$INSTALL_ROOT" ]]; then
+  printf 'Install path exists but is not an iRead repository: %s\n' "$INSTALL_ROOT" >&2
+  exit 2
+else
+  command -v curl >/dev/null 2>&1 || { printf 'curl is required to install iRead.\n' >&2; exit 2; }
+  command -v tar >/dev/null 2>&1 || { printf 'tar is required to install iRead.\n' >&2; exit 2; }
+  STAGE="$(mktemp -d "${TMPDIR:-/tmp}/iread-install.XXXXXX")"
+  trap 'rm -rf "$STAGE"' EXIT
+  curl -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 1 \
+    -o "$STAGE/iread.tar.gz" "$ARCHIVE_URL"
+  tar -xzf "$STAGE/iread.tar.gz" -C "$STAGE"
+  SOURCE_DIR="$(find "$STAGE" -mindepth 1 -maxdepth 1 -type d -name 'iRead-*' | head -n 1)"
+  [[ -n "$SOURCE_DIR" ]] || { printf 'Downloaded iRead archive is invalid.\n' >&2; exit 2; }
+  mkdir -p "$(dirname "$INSTALL_ROOT")"
+  mv "$SOURCE_DIR" "$INSTALL_ROOT"
+  touch "$INSTALL_ROOT/.iread-archive-install"
+fi
+
+if [[ "$SURFACE" == "workbuddy" ]]; then
+  exec "$INSTALL_ROOT/install-workbuddy.sh"
+fi
+exec "$INSTALL_ROOT/scripts/install.sh" "$SURFACE"

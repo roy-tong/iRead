@@ -12,6 +12,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor
 from html.parser import HTMLParser
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
@@ -78,6 +79,8 @@ class IngestResult:
     unmatched_upstream_sources: List[str] = field(default_factory=list)
     missing_expected_sources: List[str] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
+    attempted_sources: int = 0
+    elapsed_seconds: float = 0.0
 
     def as_dict(self) -> Dict[str, Any]:
         return {
@@ -89,6 +92,8 @@ class IngestResult:
             "unmatched_upstream_sources": self.unmatched_upstream_sources,
             "missing_expected_sources": self.missing_expected_sources,
             "errors": self.errors,
+            "attempted_sources": self.attempted_sources,
+            "elapsed_seconds": round(self.elapsed_seconds, 3),
         }
 
 
@@ -438,16 +443,55 @@ def _parse_external_feed(payload: bytes) -> List[Dict[str, Any]]:
 
 def ingest_external_feeds(settings: Settings, db: Database) -> IngestResult:
     result = IngestResult(mode="external_rss")
+    started_at = time.monotonic()
     start_ts = int(settings.history_start.timestamp())
     timeout = int(settings.reporting["collection"].get("external_request_timeout_seconds", 20))
     timestamp = now_ts()
-    for account in settings.external_sources:
-        if account.capture_method != "rss" or not account.feed_url:
+    accounts = [
+        account
+        for account in settings.external_sources
+        if account.capture_method == "rss" and account.feed_url
+    ]
+    result.attempted_sources = len(accounts)
+    worker_count = min(
+        len(accounts) or 1,
+        max(
+            1,
+            int(
+                settings.reporting["collection"].get(
+                    "external_fetch_workers", 6
+                )
+            ),
+        ),
+    )
+    retries = max(
+        0,
+        int(settings.reporting["collection"].get("external_fetch_retries", 1)),
+    )
+
+    def fetch(account: Account) -> Tuple[Account, Optional[List[Dict[str, Any]]], Optional[Exception]]:
+        last_error: Optional[Exception] = None
+        for attempt in range(retries + 1):
+            try:
+                articles = _parse_external_feed(_http(account.feed_url, timeout=timeout))
+                if not articles:
+                    raise RuntimeError("feed contained no dated RSS/Atom entries")
+                return account, articles, None
+            except Exception as exc:
+                last_error = exc
+                if attempt < retries:
+                    time.sleep(0.25 * (attempt + 1))
+        return account, None, last_error
+
+    with ThreadPoolExecutor(max_workers=worker_count) as executor:
+        fetched = list(executor.map(fetch, accounts))
+
+    for account, articles, fetch_error in fetched:
+        if fetch_error is not None or articles is None:
+            exc = fetch_error or RuntimeError("feed fetch returned no result")
+            result.errors.append(f"{account.name}: {type(exc).__name__}: {exc}")
             continue
         try:
-            articles = _parse_external_feed(_http(account.feed_url, timeout=timeout))
-            if not articles:
-                raise RuntimeError("feed contained no dated RSS/Atom entries")
             with db.transaction() as conn:
                 for article in articles:
                     if article["published_at"] < start_ts:
@@ -545,6 +589,7 @@ def ingest_external_feeds(settings: Settings, db: Database) -> IngestResult:
             result.matched_sources.append(account.wechat_id)
         except Exception as exc:
             result.errors.append(f"{account.name}: {type(exc).__name__}: {exc}")
+    result.elapsed_seconds = time.monotonic() - started_at
     return result
 
 
@@ -682,6 +727,8 @@ def ingest(
             result.skipped_before_start += external.skipped_before_start
             result.matched_sources.extend(external.matched_sources)
             result.errors.extend(external.errors)
+            result.attempted_sources += external.attempted_sources
+            result.elapsed_seconds += external.elapsed_seconds
         status = "ok" if not result.errors else "partial"
         db.finish_collection(run_id, status, result.imported, result.changed, result.as_dict())
         return result

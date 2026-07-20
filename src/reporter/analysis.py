@@ -118,8 +118,22 @@ def run_codex_json(
     state_dir.mkdir(parents=True, exist_ok=True)
     output_path = state_dir / f"codex-{purpose}-{uuid.uuid4().hex}.json"
     model = str(settings.env("CODEX_MODEL", settings.reporting["analysis"]["model"]))
+    if purpose.startswith("enrich"):
+        effort_key = "enrichment_reasoning_effort"
+    elif purpose.startswith("report-"):
+        effort_key = "report_reasoning_effort"
+    elif purpose == "research-proposal":
+        effort_key = "proposal_reasoning_effort"
+    else:
+        effort_key = "reasoning_effort"
     effort = str(
-        settings.env("CODEX_REASONING_EFFORT", settings.reporting["analysis"]["reasoning_effort"])
+        settings.env(
+            "CODEX_REASONING_EFFORT",
+            settings.reporting["analysis"].get(
+                effort_key,
+                settings.reporting["analysis"]["reasoning_effort"],
+            ),
+        )
     )
     timeout = int(settings.reporting["analysis"].get("timeout_seconds", 1800))
     command = [
@@ -205,7 +219,7 @@ def _article_payload(
     content = _content_excerpt(
         content,
         max_transcript_chars if has_transcript else max_chars,
-        distributed=has_transcript,
+        distributed=True,
     )
     return {
         "article_id": row["id"],

@@ -253,6 +253,97 @@ def _data_confidence_markdown(data_quality: Mapping[str, Any]) -> str:
     )
 
 
+def _markdown_section(markdown: str, heading: str) -> str:
+    match = re.search(
+        rf"(?ms)^##\s+{re.escape(heading)}\s*$\n(.*?)(?=^##\s+|\Z)",
+        markdown,
+    )
+    return match.group(1).strip() if match else ""
+
+
+def evaluate_report_quality(
+    kind: str,
+    markdown: str,
+    policy: Mapping[str, Any],
+    data_quality: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Evaluate report usability without making new factual judgments."""
+    checks: List[Dict[str, Any]] = []
+
+    def add(check_id: str, status: str, detail: str, penalty: int = 0) -> None:
+        checks.append(
+            {
+                "id": check_id,
+                "status": status,
+                "detail": detail,
+                "penalty": penalty,
+            }
+        )
+
+    reading_minutes = max(1, int(policy.get("reading_minutes", 10)))
+    visible_text = re.sub(r"\[([^]]+)\]\([^)]+\)", r"\1", markdown)
+    visible_chars = len(re.sub(r"\s+", "", visible_text))
+    max_chars = reading_minutes * 600
+    add(
+        "reading_length",
+        "pass" if visible_chars <= max_chars else "warn",
+        f"{visible_chars} visible chars; budget {max_chars}",
+        8 if visible_chars > max_chars else 0,
+    )
+
+    links = re.findall(r"\[[^]]+\]\((https?://[^)]+)\)", markdown)
+    period_articles = int(data_quality.get("period_articles", 0))
+    add(
+        "source_links",
+        "pass" if links or period_articles == 0 else "fail",
+        f"{len(links)} source links for {period_articles} period articles",
+        35 if period_articles and not links else 0,
+    )
+    if links:
+        unique_ratio = len(set(links)) / len(links)
+        add(
+            "link_diversity",
+            "pass" if unique_ratio >= 0.7 else "warn",
+            f"{len(set(links))}/{len(links)} unique links",
+            5 if unique_ratio < 0.7 else 0,
+        )
+
+    coverage = float(data_quality.get("period_analysis_coverage", 0.0))
+    add(
+        "analysis_coverage",
+        "pass" if coverage >= 0.8 else "warn",
+        f"{coverage:.0%} of period articles analyzed",
+        12 if coverage < 0.5 else (6 if coverage < 0.8 else 0),
+    )
+
+    if kind == "daily":
+        section_limits = {
+            "今日精读": int(policy.get("must_read_limit", 5)),
+            "原创观点与一手信号": int(policy.get("original_signal_limit", 3)),
+            "争议与待验证": 3,
+        }
+        for heading, limit in section_limits.items():
+            section = _markdown_section(markdown, heading)
+            count = len(re.findall(r"(?m)^###\s+", section))
+            if heading != "今日精读":
+                count = max(count, len(re.findall(r"(?m)^\d+\.\s+", section)))
+            add(
+                f"section_limit:{heading}",
+                "pass" if count <= limit else "fail",
+                f"{count}/{limit} items",
+                15 if count > limit else 0,
+            )
+
+    score = max(0, 100 - sum(int(check["penalty"]) for check in checks))
+    failed = any(check["status"] == "fail" for check in checks)
+    warned = any(check["status"] == "warn" for check in checks)
+    return {
+        "status": "fail" if failed else ("warning" if warned else "pass"),
+        "score": score,
+        "checks": checks,
+    }
+
+
 def _cluster_article_ids(
     clusters: Sequence[Mapping[str, Any]],
     row_by_id: Mapping[str, Mapping[str, Any]],
@@ -301,7 +392,23 @@ def generate_report(
     start_ts, end_ts = int(start.timestamp()), int(end.timestamp())
     existing = db.report_row(kind, start_ts, end_ts)
     if existing and not force and Path(existing["markdown_path"]).exists():
-        return {"report_id": existing["id"], "title": existing["title"], "path": existing["markdown_path"], "reused": True}
+        quality_path = Path(str(existing["markdown_path"])).with_suffix(
+            ".quality.json"
+        )
+        quality = None
+        if quality_path.is_file():
+            try:
+                quality = json.loads(quality_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                quality = None
+        return {
+            "report_id": existing["id"],
+            "title": existing["title"],
+            "path": existing["markdown_path"],
+            "quality": quality,
+            "quality_path": str(quality_path) if quality_path.is_file() else None,
+            "reused": True,
+        }
 
     all_rows = db.rows(
         """
@@ -415,10 +522,16 @@ def generate_report(
     title = _report_title(settings, kind, start, end)
     body = _strip_first_heading(str(response["markdown"]))
     markdown = f"# {title}\n\n{body}\n\n---\n\n{_data_confidence_markdown(data_quality)}\n"
+    quality = evaluate_report_quality(kind, markdown, settings.reporting[kind], data_quality)
     output_dir = settings.data_dir / "reports" / end.strftime("%Y") / end.strftime("%m")
     output_dir.mkdir(parents=True, exist_ok=True)
     path = output_dir / f"{end:%Y-%m-%d}-{kind}.md"
     path.write_text(markdown, encoding="utf-8")
+    quality_path = path.with_suffix(".quality.json")
+    quality_path.write_text(
+        json.dumps(quality, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     model = str(settings.env("CODEX_MODEL", settings.reporting["analysis"]["model"]))
     report_id = db.upsert_report(
         {
@@ -438,5 +551,7 @@ def generate_report(
         "path": str(path),
         "executive_summary": response["executive_summary"],
         "top_topics": response["top_topics"],
+        "quality": quality,
+        "quality_path": str(quality_path),
         "reused": False,
     }

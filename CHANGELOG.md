@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.2.0-beta.6 - 2026-07-20
+
+- Added a sub-120-character remote installer for Codex, Claude Code, Doubao Professional, and WorkBuddy.
+- Added strict source portfolio checks for role balance, automatic capture coverage, evidence URLs, and unique representative works.
+- Added deterministic Markdown proposal reviews so Agents can keep chat concise while users inspect the complete source list.
+- Parallelized external RSS fetches with bounded retries and collection timing metrics.
+- Reduced enrichment input size and made article enrichment use medium reasoning while preserving high reasoning for reports and source proposals.
+- Fixed Codex plugin prompt-count warnings and expanded cross-Agent installation and performance tests.
+
 ## 0.2.0-beta.5 - 2026-07-19
 
 - Added deterministic, concise installers for Codex, Claude Code, Doubao Professional, and WorkBuddy.

@@ -5,12 +5,12 @@ Generate proposals with the current Codex task and its web tools. Do not invoke 
 ## Research sequence
 
 1. Expand the user's field into 3-8 durable topics and relevant event types.
-2. Build a role-balanced source set: first-party evidence, independent verification, specialist interpretation, practitioner voices, and discovery-only leads.
+2. Target 10-15 sources (minimum eight): at least two first-party, two independent, one specialist, one practitioner, and one discovery-only source. At least 35% and no fewer than three must be verified RSS or WeChat sources; generic APIs remain pending until a connector exists.
 3. Verify every source against its own homepage or official profile. Search results and aggregators are discovery aids, not evidence URLs.
 4. Verify 2-3 representative works per source with direct, openable URLs. Prefer durable examples over merely recent posts.
 5. Confirm RSS/Atom URLs before setting `capture_method: rss`; otherwise use `web`, `api`, `wechat`, or `manual` and preserve the limitation in `warnings`.
 6. Score conservatively on the 0-100 scale and state low confidence when evidence is sparse. Preserve institutional or commercial conflicts.
-7. Write JSON that matches `schemas/research_proposal.schema.json`, include `proposal_version`, `generated_at`, and `request`, then validate it with `iread validate-proposal`.
+7. Write JSON that matches `schemas/research_proposal.schema.json`, include `proposal_version`, `generated_at`, and `request`, then validate it with `iread validate-proposal` and create the full review with `iread review-proposal`.
 
 ## User review
 
@@ -21,6 +21,6 @@ Present a compact overview before detailed rows:
 - required coverage gaps and uncertain links;
 - the practical difference between light, standard, and deep reports.
 
-For each source show name, role, why it matters, capture method, preliminary composite score, conflict/warning, and representative-work links. Do not imply that a score is observed performance.
+In chat, show at most five core sources per field. Link the generated `.review.md` for every source, role, capture method, preliminary score, conflict/warning, and representative work. Do not paste the whole list into chat or imply that a score is observed performance.
 
 End with reply-ready choices. The user should be able to approve, remove a named source, change a field boundary, choose a report policy, and decide whether collection starts without learning CLI syntax.

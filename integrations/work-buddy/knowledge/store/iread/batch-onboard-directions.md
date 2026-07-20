@@ -65,7 +65,7 @@ Use WorkBuddy's own research and browsing tools to build one proposal for every 
 
 Tell the user which domain is being researched before starting, and report progress after each domain proposal is validated. For any interactive operation that runs longer than 30 seconds, give a concise progress update and preserve completed proposal artifacts so the task can resume without repeating research.
 
-Write each result to `<batch-dir>/proposals/<domain-id>.json`. Follow `schemas/research_proposal.schema.json` and add `batch_profile_id` at the top level with the exact manifest domain id. Every strict proposal needs at least three topics, eight sources, two direct representative-work URLs per source, all five cold-start score dimensions, and exactly the `light`, `standard`, and `deep` report presets.
+Write each result to `<batch-dir>/proposals/<domain-id>.json`. Follow `schemas/research_proposal.schema.json` and add `batch_profile_id` at the top level with the exact manifest domain id. Target 10-15 sources (minimum eight), including at least two primary, two independent, one specialist, one expert/practitioner, and one discovery source. At least 35% and no fewer than three must be verified RSS or WeChat sources; generic APIs remain pending until a connector exists. Every source needs two unique direct representative-work URLs and all five cold-start score dimensions.
 
 Prefer primary sources for facts, independent reporting for verification, specialist analysis for interpretation, expert voices for practice, and discovery sources only for leads. Verify URLs with browsing. Preserve uncertainty in `warnings`, `known_gaps`, `score_confidence`, and `conflict_note` rather than inventing certainty.
 
@@ -73,13 +73,14 @@ Validate every proposal before showing it to the user:
 
 ```bash
 bin/iread validate-proposal <batch-dir>/proposals/<domain-id>.json
+bin/iread review-proposal <batch-dir>/proposals/<domain-id>.json
 ```
 
 Fix validation failures before review. Preserve successful proposal artifacts if one domain fails and report the failed id. `bin/iread batch-propose` is an optional Codex-backed shortcut when a working Codex CLI is available; it is not required for WorkBuddy operation.
 
 ## Review gate
 
-Before applying anything, summarize each proposal with:
+Before applying anything, summarize each proposal with at most five core sources in chat, and link the generated `.review.md` for the complete list:
 
 - domain id, field, generated name, topic count, and known gaps;
 - source count by `primary_source`, `expert_voice`, `independent_reporting`, `specialist_analysis`, and `discovery_signal`;

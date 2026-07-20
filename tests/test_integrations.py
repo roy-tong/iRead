@@ -143,22 +143,82 @@ class IntegrationTests(unittest.TestCase):
         self.assertTrue((plugin_dir / "skills/manage-iread/SKILL.md").is_file())
         self.assertIn("Workflow Recovery", manifest["interface"]["capabilities"])
         self.assertIn("Agent Control Contract", manifest["interface"]["capabilities"])
+        self.assertLessEqual(len(manifest["interface"]["defaultPrompt"]), 3)
         self.assertTrue((ROOT / "scripts/uninstall_schedule.sh").stat().st_mode & 0o111)
+
+    def test_remote_bootstrap_is_short_and_supports_every_agent_surface(self) -> None:
+        installer = ROOT / "install"
+        text = installer.read_text(encoding="utf-8")
+        self.assertTrue(installer.stat().st_mode & 0o111)
+        for surface in ("codex", "claude-code", "doubao", "workbuddy"):
+            self.assertIn(surface, text)
+        command = (
+            "curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install "
+            "| bash -s -- codex"
+        )
+        self.assertLess(len(command), 120)
+        self.assertNotIn("git clone", command)
+
+    def test_remote_bootstrap_uses_archive_and_preserves_runtime_on_rerun(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp = Path(temp_dir)
+            archive = temp / "iread.tar.gz"
+            with archive.open("wb") as output:
+                subprocess.run(
+                    [
+                        "git",
+                        "archive",
+                        "--format=tar.gz",
+                        "--prefix=iRead-main/",
+                        "HEAD",
+                    ],
+                    cwd=ROOT,
+                    stdout=output,
+                    check=True,
+                )
+            home = temp / "home"
+            install_root = home / ".local/share/iread"
+            env = {
+                **os.environ,
+                "HOME": str(home),
+                "IREAD_INSTALL_ROOT": str(install_root),
+                "IREAD_ARCHIVE_URL": archive.as_uri(),
+                "WERSS_BASE_URL": "http://127.0.0.1:9",
+            }
+            for _ in range(2):
+                completed = subprocess.run(
+                    [str(ROOT / "install"), "claude-code"],
+                    cwd=ROOT,
+                    env=env,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
+                self.assertIn("iRead check passed:", completed.stdout)
+            self.assertTrue((install_root / ".iread-archive-install").is_file())
+            self.assertTrue((install_root / ".env").is_file())
+            self.assertTrue((home / ".claude/skills/iread/SKILL.md").is_file())
 
     def test_codex_management_skill_covers_status_reports_and_approval(self) -> None:
         skill_dir = ROOT / "integrations/codex/plugins/iread/skills/manage-iread"
         skill = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
+        references = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in sorted((skill_dir / "references").glob("*.md"))
+        )
+        combined = skill + references
         metadata = (skill_dir / "agents/openai.yaml").read_text(encoding="utf-8")
-        self.assertIn("../../scripts/iread workspace", skill)
-        self.assertIn("reports --kind <kind> --limit 5", skill)
-        self.assertIn("active_with_gaps", skill)
-        self.assertIn("active_unverified", skill)
-        self.assertIn("Require explicit approval", skill)
-        self.assertIn("--request-id <stable-request-id>", skill)
+        self.assertLess(len(skill.split()), 260)
+        self.assertIn("Run only `workspace` first", skill)
+        self.assertIn("reports --kind <kind> --limit 5", combined)
+        self.assertIn("active_with_gaps", combined)
+        self.assertIn("active_unverified", combined)
+        self.assertIn("Require explicit approval", combined)
+        self.assertIn("--request-id <stable-id>", combined)
         self.assertIn("operations --limit 20", skill)
         self.assertIn("workspace` and `acceptance", skill)
-        self.assertIn("feedback add", skill)
-        self.assertIn("schedule uninstall --approved", skill)
+        self.assertIn("feedback add", combined)
+        self.assertIn("schedule uninstall --approved", combined)
         self.assertIn("$manage-iread", metadata)
 
     def test_codex_onboarding_uses_current_task_research(self) -> None:
@@ -167,11 +227,16 @@ class IntegrationTests(unittest.TestCase):
         reference = (skill_dir / "references/proposal-authoring.md").read_text(
             encoding="utf-8"
         )
+        activation = (skill_dir / "references/apply-and-activate.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertLess(len(skill.split()), 260)
         self.assertIn("current Codex task", skill)
-        self.assertIn("instead of invoking another Codex process", skill)
+        self.assertIn("Do not run Doctor", skill)
         self.assertIn("iread validate-proposal", skill)
         self.assertIn("批准全部领域", skill)
         self.assertIn("Do not invoke a nested Codex process", reference)
+        self.assertIn("activate --approved --install-schedule", activation)
 
     def test_codex_installer_creates_codex_home_and_prints_concise_result(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

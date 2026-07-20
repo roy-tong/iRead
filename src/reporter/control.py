@@ -82,6 +82,15 @@ def capability_contract(root: Path) -> Dict[str, Any]:
                 "idempotency": "resume_by_output_path",
             },
             {
+                "id": "review_proposal",
+                "cli": "review-proposal PROPOSAL [--output PATH]",
+                "description": "Create a complete clickable source review for human approval.",
+                "permissions": ["local_read", "local_write"],
+                "side_effects": ["writes_review_markdown"],
+                "approval": "none",
+                "idempotency": "same_proposal_replaces_same_review",
+            },
+            {
                 "id": "apply_subscription",
                 "cli": "apply-subscription MANIFEST --approved DOMAIN --output-dir DIR",
                 "description": "Create one subscription from explicitly approved domains.",

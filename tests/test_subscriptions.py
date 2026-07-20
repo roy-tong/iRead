@@ -8,7 +8,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 from reporter.cli import build_parser
-from reporter.proposals import validate_research_proposal
+from reporter.proposals import proposal_review_markdown, validate_research_proposal
 from reporter.settings import Settings, parse_datetime
 from reporter.subscriptions import apply_research_subscription
 
@@ -166,19 +166,54 @@ class SubscriptionTests(unittest.TestCase):
             ],
         }
         shared_feed = "https://example.com/feed.xml"
+        roles = [
+            "primary_source",
+            "expert_voice",
+            "independent_reporting",
+            "independent_reporting",
+            "specialist_analysis",
+            "discovery_signal",
+            "primary_source",
+        ]
+        medical_sources = [
+            _source("shared-medical", "共享官方源", feed_url=shared_feed)
+        ] + [
+            _source(
+                f"medical-{index}",
+                f"医疗信源 {index}",
+                feed_url=f"https://example.com/medical-{index}.xml",
+                role=role,
+            )
+            for index, role in enumerate(roles, 1)
+        ]
+        energy_sources = [
+            _source("shared-energy", "共享官方源", feed_url=shared_feed)
+        ] + [
+            _source(
+                f"energy-{index}",
+                f"能源信源 {index}",
+                feed_url=f"https://example.com/energy-{index}.xml",
+                role=role,
+            )
+            for index, role in enumerate(roles[:-1], 1)
+        ] + [
+            _source(
+                "energy-wechat",
+                "能源公众号",
+                platform_id="energy_wechat",
+                role=roles[-1],
+            )
+        ]
         proposals = {
             "medical-devices": _proposal(
                 "medical-devices",
                 "医疗器械监管",
-                [_source("shared-medical", "共享官方源", feed_url=shared_feed)],
+                medical_sources,
             ),
             "energy-markets": _proposal(
                 "energy-markets",
                 "新能源电力市场",
-                [
-                    _source("shared-energy", "共享官方源", feed_url=shared_feed),
-                    _source("energy-wechat", "能源公众号", platform_id="energy_wechat"),
-                ],
+                energy_sources,
             ),
         }
 
@@ -206,7 +241,7 @@ class SubscriptionTests(unittest.TestCase):
             self.assertEqual(2, result["domain_count"])
             self.assertEqual(1, result["deduplicated_sources"])
             self.assertEqual(1, result["wechat_sources"])
-            self.assertEqual(1, result["external_sources"])
+            self.assertEqual(14, result["external_sources"])
 
             configured = Settings.load(ROOT, output_dir)
             self.assertEqual("我的 iRead", configured.profile.name)
@@ -287,6 +322,13 @@ class SubscriptionTests(unittest.TestCase):
         self.assertEqual("valid", result["status"])
         self.assertEqual(8, result["sources"])
         self.assertEqual(sorted(roles), result["source_roles"])
+        self.assertEqual(8, result["automatic_capture_sources"])
+
+        review = proposal_review_markdown(proposal)
+        self.assertIn("信源审核稿", review)
+        self.assertIn("可自动采集：8 个", review)
+        self.assertEqual(8, review.count("\n### "))
+        self.assertIn("批准该领域", review)
 
     def test_strict_proposal_validation_rejects_missing_source_roles(self) -> None:
         proposal = _proposal(

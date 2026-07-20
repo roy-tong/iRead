@@ -193,6 +193,8 @@ def list_reports(
         reports = []
         for row in rows:
             markdown_path = Path(str(row["markdown_path"])).expanduser()
+            quality_path = markdown_path.with_suffix(".quality.json")
+            quality = _read_object(quality_path) if quality_path.is_file() else {}
             reports.append(
                 {
                     "id": int(row["id"]),
@@ -200,6 +202,11 @@ def list_reports(
                     "title": str(row["title"]),
                     "path": str(markdown_path),
                     "exists": markdown_path.is_file(),
+                    "quality": {
+                        "status": quality.get("status"),
+                        "score": quality.get("score"),
+                        "path": str(quality_path) if quality else None,
+                    },
                     "period_start": int(row["period_start"]),
                     "period_end": int(row["period_end"]),
                     "created_at": int(row["created_at"]),

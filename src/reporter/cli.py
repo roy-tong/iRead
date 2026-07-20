@@ -58,6 +58,7 @@ from .proposals import (
     apply_research_proposal,
     propose_research_batch,
     propose_research_setup,
+    proposal_review_markdown,
     validate_research_proposal,
 )
 from .reports import due_report_kinds, generate_report, report_window
@@ -378,6 +379,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="Allow small fixtures while still checking proposal structure",
     )
 
+    review_proposal = sub.add_parser(
+        "review-proposal",
+        help="Create a complete human-readable source review from a validated proposal",
+    )
+    review_proposal.add_argument("proposal")
+    review_proposal.add_argument("--output")
+
     batch_propose = sub.add_parser(
         "batch-propose",
         help="Generate resumable research proposals from a batch manifest",
@@ -479,6 +487,7 @@ def main(argv: Optional[list] = None) -> int:
         "propose",
         "apply-proposal",
         "validate-proposal",
+        "review-proposal",
         "batch-propose",
         "batch-apply",
         "apply-subscription",
@@ -502,6 +511,7 @@ def main(argv: Optional[list] = None) -> int:
         "batch-propose",
         "batch-apply",
         "apply-subscription",
+        "review-proposal",
         "run",
     }
     is_mutating = args.command in mutating_commands or (
@@ -949,6 +959,7 @@ def main(argv: Optional[list] = None) -> int:
             elif args.command == "apply-proposal":
                 proposal_path = settings.resolve_path(args.proposal)
                 proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
+                validate_research_proposal(proposal, strict=True)
                 _json(
                     apply_research_proposal(
                         settings,
@@ -971,6 +982,19 @@ def main(argv: Optional[list] = None) -> int:
                         "proposal": str(proposal_path),
                     }
                 )
+            elif args.command == "review-proposal":
+                proposal_path = settings.resolve_path(args.proposal)
+                proposal = json.loads(proposal_path.read_text(encoding="utf-8"))
+                markdown = proposal_review_markdown(proposal)
+                output_path = (
+                    settings.resolve_path(args.output)
+                    if args.output
+                    else proposal_path.with_suffix(".review.md")
+                )
+                output_path.parent.mkdir(parents=True, exist_ok=True)
+                output_path.write_text(markdown + "\n", encoding="utf-8")
+                validation = validate_research_proposal(proposal, strict=True)
+                _json({**validation, "output": str(output_path)})
             elif args.command == "batch-propose":
                 manifest_path = settings.resolve_path(args.manifest)
                 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -996,6 +1020,7 @@ def main(argv: Optional[list] = None) -> int:
                         approved=args.approved,
                         approve_all=args.approve_all,
                         force=args.force,
+                        strict=True,
                     )
                 )
             elif args.command == "apply-subscription":

@@ -4,7 +4,7 @@ iRead is an open-source, local-first AI research assistant that discovers high-q
 
 [Simplified Chinese](README.md) | [Quick Start](#quick-start) | [Documentation](#documentation) | [Contributing](CONTRIBUTING.md)
 
-![Version](https://img.shields.io/badge/version-0.2.0--beta.5-orange)
+![Version](https://img.shields.io/badge/version-0.2.0--beta.6-orange)
 ![Platform](https://img.shields.io/badge/platform-macOS-lightgrey)
 ![Interface](https://img.shields.io/badge/interface-Agent%20Skills-111111)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -39,10 +39,10 @@ It is designed for researchers, investors, product managers, students, and indus
 Requirements: macOS, Python 3.9+, Git, and Codex, Claude Code, Doubao Professional office-task mode, or WorkBuddy.
 
 ```bash
-git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/scripts/install.sh codex
+curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- codex
 ```
 
-This is the Codex command. Replace the final `codex` with `claude-code` or `doubao` for those surfaces. See the [Agent installation guide](docs/agent-installation.md) for WorkBuddy and Doubao ZIP import. Installation is deterministic and does not ask the Agent to analyze the repository or rebuild a full index.
+This is the Codex command. Replace `codex` with `claude-code`, `doubao`, or `workbuddy` for another surface. Installation is deterministic and does not ask the Agent to analyze the repository or rebuild a full index. A Git-only alternative is documented in the [Agent installation guide](docs/agent-installation.md).
 
 After installation, start a new task and say:
 
@@ -58,13 +58,13 @@ The Agent will stop for review before creating a subscription, collecting articl
 Send one sentence in WorkBuddy:
 
 ```text
-Only run this command to install iRead; do not browse or analyze the repository: git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
+Only run this command to install iRead; do not analyze the repository: curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- workbuddy
 ```
 
 WorkBuddy only needs one deterministic shell action. The terminal fallback is:
 
 ```bash
-git -C ~/.local/share/iread pull --ff-only 2>/dev/null || git clone --depth 1 https://github.com/roy-tong/iRead.git ~/.local/share/iread; ~/.local/share/iread/install-workbuddy.sh
+curl -fsSL https://raw.githubusercontent.com/roy-tong/iRead/main/install | bash -s -- workbuddy
 ```
 
 Open a new WorkBuddy task after installation and run `/iread`. Normal installation does not analyze the repository or rebuild the full WorkBuddy knowledge index.
@@ -104,7 +104,7 @@ New subscriptions generate local Markdown by default. Notion or public publishin
 
 ## Current status
 
-`0.2.0-beta.5` is a public beta, not a stable release.
+`0.2.0-beta.6` is a public beta, not a stable release.
 
 - The runtime currently targets macOS. Codex and Claude Code have deterministic local installers; Doubao Professional and WorkBuddy remain experimental adapters.
 - RSS feeds can be collected automatically. Public web candidates remain disclosed as coverage gaps until a connector is available.
